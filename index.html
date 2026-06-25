@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GIDA Labs | Assessment Investigation 001</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+<div class="app">
+  <div class="titlebar">
+    <div class="brand" onclick="showAbout()">
+      <div class="logo">G</div>
+      <div>
+        <h1>GIDA Labs</h1>
+        <div>Assessment Investigation 001: When does assessment measure knowledge, and when does it measure access?</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="window">
+    <aside class="sidebar">
+      <div class="panel">
+        <h3>Lab Menu</h3>
+        <button class="folder" onclick="showIntro()">Start Screen</button>
+        <button class="folder" onclick="showModules()">Module Directory</button>
+        <button class="folder" onclick="showFolders()">Case Files</button>
+        <button class="folder" onclick="showReveal()">Evidence Summary</button>
+        <button class="folder" onclick="showExperts()">Professional Consultation</button>
+      </div>
+
+      <div class="panel">
+        <h3>Investigation</h3>
+        <p><strong>Content:</strong> Plant needs</p>
+        <p><strong>Core question:</strong> Does an assessment result show science knowledge, or access to the assessment?</p>
+      </div>
+
+      <div class="panel">
+        <h3>Evidence Log</h3>
+        <div class="progress"><div id="bar"></div></div>
+        <p id="logCount">0 of 5 cases reviewed</p>
+        <button onclick="resetLab()">Reset Evidence</button>
+      </div>
+
+      <div class="panel status-panel">
+        <h3>System Status</h3>
+        <p id="status">GIDA Labs ready.</p>
+        <button onclick="toggleSound()" id="soundButton">Sound: On</button>
+      </div>
+
+      <div class="panel">
+        <h3>Important Note</h3>
+        <p>This is not a true disability simulation. It demonstrates how reduced access can distort assessment results.</p>
+      </div>
+    </aside>
+
+    <main class="main">
+      <div class="screen" id="screen"></div>
+    </main>
+  </div>
+</div>
+
+<div id="blackout">Visual access interrupted...</div>
+
+<script src="js/data.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
