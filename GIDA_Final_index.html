@@ -1,0 +1,2766 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GIDA Labs | Assessment Investigation 001</title>
+  <style>
+:root{
+  --blue:#1d4f75; --blue2:#2f779f; --dark:#1b2b34; --mid:#9fb3bf; --light:#eef4f7;
+  --cream:#fff8df; --green:#dff2df; --red:#f5dddd; --folder:#ffe08a;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:"Trebuchet MS", Arial, sans-serif;
+  color:#17242b;
+  background:radial-gradient(circle at 20% 10%, #ffffff 0, #d8e4ea 38%, #9fb3bf 100%);
+}
+.app{
+  width:min(1120px,96vw);
+  margin:22px auto;
+  border:3px solid #566e7a;
+  background:#dbe6eb;
+  box-shadow:0 14px 38px rgba(0,0,0,.35);
+}
+.titlebar{
+  background:linear-gradient(#3d7da5,#1d4f75);
+  color:#fff;
+  padding:12px 16px;
+  border-bottom:3px solid #123750;
+}
+.brand{display:flex;gap:12px;align-items:center;cursor:pointer}
+.logo{
+  width:54px;height:54px;border-radius:8px;
+  background:linear-gradient(#f8fbfd,#c6d9e3);
+  border:2px outset #dbe6eb;
+  color:#1d4f75;
+  display:flex;align-items:center;justify-content:center;
+  font-size:2rem;font-weight:bold;
+  box-shadow:inset 0 0 0 2px #eef4f7;
+}
+.titlebar h1{margin:0;font-size:1.55rem}
+.titlebar div div{opacity:.92;font-size:.95rem;margin-top:3px}
+.window{display:grid;grid-template-columns:260px 1fr;min-height:720px}
+.sidebar{background:#c7d6de;border-right:2px solid #778d99;padding:14px}
+.panel{
+  background:#f7fbfd;
+  border:2px groove #9badb7;
+  padding:12px;
+  margin-bottom:14px;
+}
+.panel h3{margin:0 0 8px;color:#1d4f75;font-size:1rem}
+.panel p,.panel li{font-size:.9rem;line-height:1.3}
+.main{padding:18px}
+.screen{
+  background:white;
+  border:3px inset #91a6b0;
+  min-height:650px;
+  padding:20px;
+  position:relative;
+  overflow:auto;
+}
+.screen h2{margin-top:0;color:#1d4f75}
+button, .linkbutton{
+  border:1px solid #243946;
+  background:linear-gradient(#fff,#c7d4db);
+  padding:9px 13px;
+  margin:5px 5px 5px 0;
+  font-weight:bold;
+  cursor:pointer;
+  color:#102332;
+  text-decoration:none;
+  display:inline-block;
+  font-size:.9rem;
+}
+button.primary,.linkbutton.primary{background:linear-gradient(#4f91bc,#245a7c);color:white}
+button.folder{width:100%;text-align:left;margin:4px 0}
+.row{display:flex;gap:14px;flex-wrap:wrap}
+.folder-card{
+  width:175px;
+  border:2px solid #ad8b33;
+  background:linear-gradient(#ffe08a 0 18%,#fff2bd 18%);
+  padding:36px 12px 12px;
+  min-height:145px;
+  cursor:pointer;
+  box-shadow:3px 4px 0 rgba(0,0,0,.15);
+  transition:.18s;
+}
+.folder-card:hover{transform:translateY(-2px)}
+.badge{
+  display:inline-block;background:#e8f1f7;border:1px solid #8ca7b7;
+  padding:4px 8px;margin:3px 3px 6px 0;font-size:.85rem;
+}
+.labbox{background:#f4f8e8;border:1px solid #b9bd77;padding:12px;margin:14px 0}
+.evidence{background:#eef5fb;border-left:7px solid #1d4f75;padding:12px;margin:12px 0}
+.warning{background:#fff2c9;border:1px solid #b89732;padding:11px;margin-top:12px}
+.question{font-size:1.5rem;font-weight:bold;margin:16px 0}
+.option{display:block;border:1px solid #9caab1;background:#f7f9fa;margin:9px 0;padding:10px;cursor:pointer}
+.option:hover{background:#e8f0f4}
+.feedback{min-height:44px;margin-top:12px;padding:11px;border:1px solid #aab8c0;background:#f8fbfc;font-weight:bold}
+.choice-big{
+  display:inline-block;min-width:175px;text-align:center;padding:12px;margin:7px;
+  border:2px solid #7b8e98;background:#f4f8fa;cursor:pointer;vertical-align:top;
+}
+.choice-big:hover{background:#e1edf3}
+.correct{background:var(--green)!important}
+.incorrect{background:var(--red)!important}
+.notebook{font-family:"Courier New", monospace;background:#fffdf2;border:1px solid #b7a96e;padding:12px;line-height:1.35}
+.visual-challenge{
+  position:relative;display:inline-block;
+  animation:drift .42s infinite alternate ease-in-out;
+  filter:blur(1.15px);
+  letter-spacing:-2px;word-spacing:-5px;
+  opacity:.88;
+}
+.visual-challenge::after{
+  content:attr(data-text);position:absolute;left:4px;top:3px;opacity:.45;filter:blur(1.7px);
+}
+@keyframes drift{
+  from{transform:translateX(-9px) translateY(-3px) skewX(-3deg)}
+  to{transform:translateX(10px) translateY(3px) skewX(3deg)}
+}
+.moving{animation:floaty .32s infinite alternate ease-in-out;display:inline-block}
+@keyframes floaty{from{transform:translateY(-6px)}to{transform:translateY(6px)}}
+.symbol{font-size:2.3rem;margin-right:8px}
+.progress{height:16px;background:#c0ccd2;border:1px inset #80939e;margin:8px 0}
+.progress div{height:100%;background:#2f779f;width:0%;transition:width .4s}
+.archive-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:13px}
+.archive-card{
+  border:2px solid #7f95a0;background:linear-gradient(#fdfefe,#e6eef2);
+  padding:12px;min-height:165px;box-shadow:2px 3px 0 rgba(0,0,0,.12);
+}
+.archive-card h3{margin:0 0 6px;color:#1d4f75}
+.archive-card p{font-size:.92rem;line-height:1.3}
+.expert-head{display:grid;grid-template-columns:90px 1fr;gap:14px;align-items:center;margin-bottom:12px}
+.avatar{
+  width:86px;height:86px;border-radius:8px;background:linear-gradient(#edf5fa,#b6c9d4);
+  border:2px solid #7f95a0;display:flex;align-items:center;justify-content:center;
+  font-size:2rem;font-weight:bold;color:#1d4f75;
+}
+.clipbox{border:2px inset #8fa3ad;background:#f1f6f9;padding:14px;margin:12px 0}
+.clipbox h3{margin-top:0;color:#1d4f75}
+.clipline{margin:8px 0;padding-left:12px;border-left:4px solid #8fa3ad}
+.smallnote{font-size:.86rem;color:#40525b}
+.module-card{opacity:.9}
+.locked{filter:grayscale(.4);opacity:.65}
+#blackout{
+  position:fixed;inset:0;background:#000;color:#dbe6eb;display:none;
+  align-items:center;justify-content:center;z-index:9999;font-family:"Courier New", monospace;
+  font-size:1.2rem;letter-spacing:1px;
+}
+.flash-access{
+  animation:contrastPulse .65s infinite alternate;
+}
+@keyframes contrastPulse{
+  from{background:#fff;color:#17242b}
+  to{background:#777;color:#555}
+}
+.loading{
+  font-family:"Courier New", monospace;
+  background:#07151f;color:#b7f5ff;padding:16px;border:2px inset #3a5666;
+}
+.language-sample{background:#fffdf2;border:2px inset #b7a96e;padding:14px;margin:14px 0;font-family:"Courier New",monospace;line-height:1.5}
+.transcript-line{padding:7px 0;border-bottom:1px dotted #cbbf92}
+.transcript-line:last-child{border-bottom:none}
+.observation-card{border:1px solid #98aab3;background:#f7fbfd;padding:10px;margin:8px 0;cursor:pointer}
+.observation-card:hover{background:#e8f0f4}
+.observation-card.selected{background:#dff2df;border-color:#7ba77b}
+.step-label{display:inline-block;background:#1d4f75;color:#fff;padding:4px 8px;margin-bottom:8px;font-size:.85rem;font-weight:bold}
+.code-chip{display:inline-block;background:#fff2c9;border:1px solid #b89732;padding:3px 7px;margin:2px;font-size:.83rem}
+
+  
+.portfolio-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(235px,1fr));gap:14px;margin:16px 0}
+.portfolio-card{border:2px solid #8a999f;background:#f8fbfc;padding:12px;cursor:pointer;box-shadow:3px 3px 0 #c9d6dc}
+.portfolio-card:hover{transform:translateY(-2px)}
+.student-photo{width:112px;height:112px;border-radius:10px;object-fit:cover;object-position:center 22%;border:3px solid #fff;box-shadow:0 0 0 2px #7a8c96;background:#dfe8ec}
+.portfolio-head{display:grid;grid-template-columns:118px 1fr;gap:14px;align-items:center;margin:12px 0 16px}
+.profile-strip{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}
+.artifact-card{border-left:5px solid #2f779f;background:#f7fbfd;padding:12px;margin:10px 0}
+.timeline-item{border-left:3px solid #7a8c96;padding:4px 0 10px 14px;margin-left:7px}
+.proficiency-note{font-size:.78rem;color:#425a66;margin-top:8px}
+
+
+.peer-pair{display:grid;grid-template-columns:1fr auto 1fr;gap:12px;align-items:center;margin:14px 0}
+.peer-student{background:#f8fbfc;border:2px solid #93a5ae;padding:12px;min-height:128px}
+.peer-arrow{font-size:1.8rem;font-weight:800;color:#516b78}
+.feedback-chip{display:inline-block;border:1px solid #7e929d;border-radius:16px;padding:4px 8px;margin:3px;font-size:.78rem;background:#fff}
+.peer-comment{border-left:5px solid #5d8295;background:#f5fafc;padding:12px;margin:10px 0}
+.peer-comment.good{border-left-color:#4d8360}
+.peer-comment.caution{border-left-color:#9d7b3d}
+.peer-comment.risk{border-left-color:#9a5353}
+.criteria-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(175px,1fr));gap:9px;margin:12px 0}
+.criteria-box{border:1px solid #9bacb4;background:white;padding:10px}
+.protocol-step{display:grid;grid-template-columns:36px 1fr;gap:10px;align-items:start;margin:8px 0}
+.protocol-num{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:#526f7e;color:white;font-weight:700}
+
+
+.self-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px;margin:14px 0}
+.self-tool{border:2px solid #8fa1aa;background:#f8fbfc;padding:12px;box-shadow:2px 2px 0 #d0d9de}
+.self-scale{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:12px 0}
+.self-scale button{min-height:68px}
+.student-think{border-left:5px solid #607f91;background:#f5fafc;padding:12px;margin:10px 0}
+.reflection-card{border:2px dashed #879aa4;background:#fff;padding:12px;margin:12px 0}
+.goal-card{border-left:5px solid #4e7b61;background:#f6fbf7;padding:12px;margin:10px 0}
+
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="titlebar">
+    <div class="brand" onclick="showAbout()">
+      <div class="logo">G</div>
+      <div>
+        <h1>GIDA Labs</h1>
+        <div>Assessment Investigation 001: When does assessment measure knowledge, and when does it measure access?</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="window">
+    <aside class="sidebar">
+      <div class="panel">
+        <h3>Lab Menu</h3>
+        <button class="folder" onclick="showIntro()">Start Screen</button>
+        <button class="folder" onclick="showModules()">Module Directory</button>
+        <button class="folder" onclick="showFolders()">Case Files</button>
+        <button class="folder" onclick="showReveal()">Evidence Summary</button>
+        <button class="folder" onclick="showExperts()">Professional Consultation</button>
+      </div>
+
+      <div class="panel">
+        <h3>Investigation</h3>
+        <p><strong>Content:</strong> Plant needs</p>
+        <p><strong>Core question:</strong> Does an assessment result show science knowledge, or access to the assessment?</p>
+      </div>
+
+      <div class="panel">
+        <h3>Evidence Log</h3>
+        <div class="progress"><div id="bar"></div></div>
+        <p id="logCount">0 of 5 cases reviewed</p>
+        <button onclick="resetLab()">Reset Evidence</button>
+      </div>
+
+      <div class="panel status-panel">
+        <h3>System Status</h3>
+        <p id="status">GIDA Labs ready.</p>
+        <button onclick="toggleSound()" id="soundButton">Sound: On</button>
+      </div>
+
+      <div class="panel">
+        <h3>Important Note</h3>
+        <p>This is not a true disability simulation. It demonstrates how reduced access can distort assessment results.</p>
+      </div>
+    </aside>
+
+    <main class="main">
+      <div class="screen" id="screen"></div>
+    </main>
+  </div>
+</div>
+
+<div id="blackout">Visual access interrupted...</div>
+
+<script>
+const students = [
+  {
+    id:"A", caseNo:"001", name:"Miguel", access:"Spanish print access", folder:"Home Language",
+    question:"¿Qué necesitan las plantas para crecer?",
+    options:["Agua","Luz solar","Rocas","Aire","Dulces"],
+    correct:["Agua","Luz solar","Aire"],
+    profile:"Miguel understands classroom science better when allowed to use Spanish and emerging English.",
+    interpretation:"A Spanish response can still be valid evidence of science understanding.",
+    expertKeys:["coelho","garcia"]
+  },
+  {
+    id:"B", caseNo:"002", name:"Ji-hoon", access:"Korean print access", folder:"Language Access",
+    question:"식물이 자라려면 무엇이 필요합니까?",
+    options:["물","햇빛","바위","공기","사탕"],
+    correct:["물","햇빛","공기"],
+    profile:"Ji-hoon may understand the science concept but cannot access an English-only written assessment.",
+    interpretation:"Difficulty reading the assessment language cannot automatically be interpreted as a content gap.",
+    expertKeys:["cummins"]
+  },
+  {
+    id:"C", caseNo:"003", name:"Sophia", access:"Visual access barrier", folder:"Visual Access",
+    question:"¿Qué necesitan las plantas para crecer?",
+    options:["Agua","Luz solar","Rocas","Aire","Dulces"],
+    correct:["Agua","Luz solar","Aire"],
+    visual:true,
+    profile:"Sophia is multilingual and may also have an unidentified reading or visual-processing need.",
+    interpretation:"For multilingual learners, disability-related needs can be missed when every difficulty is attributed only to language acquisition.",
+    expertKeys:["gottlieb"]
+  },
+  {
+    id:"D", caseNo:"004", name:"Aiden", access:"AAC / symbol response", folder:"Communication Mode",
+    question:"Which symbols show what plants need?",
+    options:["💧 Water","☀️ Sunlight","🪨 Rocks","🌬️ Air","🍬 Candy"],
+    correct:["💧 Water","☀️ Sunlight","🌬️ Air"],
+    symbols:true,
+    profile:"Aiden communicates most clearly with symbols, pointing, or AAC.",
+    interpretation:"A student can demonstrate content knowledge without using a spoken or written English sentence.",
+    expertKeys:["gottlieb","garcia"]
+  },
+  {
+    id:"E", caseNo:"005", name:"Gideon", access:"English print access", folder:"Comparison Case",
+    question:"What do plants need to grow?",
+    options:["Water","Sunlight","Rocks","Air","Candy"],
+    correct:["Water","Sunlight","Air"],
+    profile:"This case shows how simple the task feels when language and visual access align with the learner.",
+    interpretation:"The science target is stable. The variable across cases is assessment access.",
+    expertKeys:["coelho"]
+  }
+];
+
+const experts = {
+  coelho:{
+    initials:"EC", name:"Elizabeth Coelho", focus:"Adding English: practical classroom access",
+    type:"Text + Resource Archive", bestAfter:"Use after Miguel or before your conclusion.",
+    clipTitle:"Two-Minute Presenter Blurb",
+    blurb:[
+      "Coelho’s practical contribution is the phrase and mindset of adding English. Students are not empty language containers, and they are not abandoning the languages they already have. They are adding English to a linguistic and cultural foundation.",
+      "For assessment, this means I should not treat home-language use as avoiding the task. If the content target is science, I can allow drawing, discussion, Spanish labels, bilingual word banks, gestures, or teacher-scribed oral responses while still teaching academic English.",
+      "The key classroom move is not lowering expectations. It is separating the content target from unnecessary language barriers so I can see what the student knows and what language support they need next."
+    ],
+    application:"Give multilingual learners ways to show content knowledge while intentionally adding English vocabulary and structures over time.",
+    links:[
+      ["Open Adding English resource page","https://books.google.com/books/about/Adding_English.html?id=YeqeAAAAMAAJ"],
+      ["Open Coelho interview","https://channelviewpublications.wordpress.com/2012/07/09/an-interview-with-elizabeth-coelho/"]
+    ]
+  },
+  cummins:{
+    initials:"JC", name:"Jim Cummins", focus:"Multilingualism, identity, and literacy",
+    type:"Video Link + Archive Summary", bestAfter:"Use after Ji-hoon, the Korean access case.",
+    clipTitle:"Suggested Video Connection",
+    blurb:[
+      "Cummins helps explain why a student’s first language is not a problem to overcome. Home-language knowledge can support literacy, identity, and academic development.",
+      "In this lab, Ji-hoon may know the science but cannot access the written assessment language. That does not mean the learner lacks cognition or content knowledge.",
+      "The assessment implication is that I need additional evidence: oral explanation, drawing, home-language support, family input, observation, and progress over time."
+    ],
+    application:"Use the student’s strongest language and identity resources as bridges to academic English rather than treating them as interference.",
+    links:[
+      ["Open Jim Cummins video: Benefits of Multilingual Literacy","https://www.youtube.com/watch?v=kGKdm3ntr7g"],
+      ["Open Jim Cummins video: Language and Identity","https://www.youtube.com/watch?v=ebQ2p8072M0"]
+    ]
+  },
+  garcia:{
+    initials:"OG", name:"Ofelia García", focus:"Translanguaging",
+    type:"Video Link + Archive Summary", bestAfter:"Use after Miguel or the final reveal.",
+    clipTitle:"Suggested Video Connection",
+    blurb:[
+      "García gives us the language of translanguaging: multilingual students use their full linguistic repertoires to make meaning.",
+      "In assessment, translanguaging can be evidence. A student who labels agua, points to the sun, explains in Spanish, and repeats key words in English may be showing real science understanding.",
+      "The teacher’s job is to design assessment conditions that reveal understanding while still supporting growth toward academic English."
+    ],
+    application:"Let students use multiple languages strategically, then document what they know and what academic English they are ready to add.",
+    links:[
+      ["Open Ofelia García interview: Translanguaging","https://www.youtube.com/watch?v=5Ljr4C9velU"],
+      ["Open Language on the Move interview page","https://languageonthemove.com/translanguaging-ofelia-garcia-in-interview/"]
+    ]
+  },
+  gottlieb:{
+    initials:"MG", name:"Margo Gottlieb", focus:"Meaningful multilingual assessment",
+    type:"Video/Article Link + Archive Summary", bestAfter:"Use after Sophia, Aiden, or the conclusion.",
+    clipTitle:"Suggested Video/Reading Connection",
+    blurb:[
+      "Gottlieb’s work is the strongest conclusion voice for this lab because she focuses directly on multilingual assessment.",
+      "Her lens pushes us to ask what evidence the assessment produces and whether that evidence is culturally and linguistically sustaining.",
+      "For multilingual learners, one written English response is rarely enough. Classroom assessment should include multiple opportunities, multiple language domains, student reflection, and evidence of growth."
+    ],
+    application:"Use assessment as a way to discover what multilingual learners can do, not just as a tool for recording what they cannot yet express in English.",
+    links:[
+      ["Open Margo Gottlieb video: Meaningful Multilingual Assessment","https://www.youtube.com/watch?v=X2fOjgGsWgo"],
+      ["Open CAL article by Margo Gottlieb","https://www.cal.org/publications/how-can-multilingual-learners-and-their-teachers-make-a-difference-in-classroom-assessment/"],
+      ["Open Ellevation collaborative assessment session","https://ellevationeducation.com/video/empowering-multilingual-learners-through-collaborative-assessment-dr-margo-gottlieb-and-dr"]
+    ]
+  }
+};
+
+let reviewed = new Set();
+let currentStudent = null;
+let selected = new Set();
+let soundOn = true;
+
+function beep(type="ding"){
+  if(!soundOn) return;
+  try{
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain); gain.connect(ctx.destination);
+    const tones = {
+      ding:[880,0.08],
+      file:[520,0.045],
+      unlock:[660,0.06],
+      complete:[784,0.09],
+      error:[180,0.08]
+    };
+    const [freq,dur] = tones[type] || tones.ding;
+    osc.frequency.value = freq;
+    osc.type = "sine";
+    gain.gain.setValueAtTime(0.001, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.08, ctx.currentTime + 0.01);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + dur);
+    osc.start();
+    osc.stop(ctx.currentTime + dur + 0.02);
+  }catch(e){}
+}
+
+function setStatus(text, tone=null){
+  document.getElementById("status").textContent = text;
+  if(tone) beep(tone);
+}
+
+function toggleSound(){
+  soundOn = !soundOn;
+  document.getElementById("soundButton").textContent = soundOn ? "Sound: On" : "Sound: Off";
+  if(soundOn) beep("ding");
+}
+
+function updateBar(){
+  const pct = (reviewed.size / students.length) * 100;
+  document.getElementById("bar").style.width = pct + "%";
+  document.getElementById("logCount").textContent = `${reviewed.size} of ${students.length} cases reviewed`;
+}
+
+function loadingThen(callback, msg="Loading assessment record..."){
+  document.getElementById("screen").innerHTML = `<div class="loading">${msg}<br><br>████████░░<br><br>Accessing GIDA Labs evidence database...</div>`;
+  beep("file");
+  setTimeout(callback, 450);
+}
+
+function showIntro(){
+  setStatus("Start screen loaded.", "ding");
+  document.getElementById("screen").innerHTML = `
+    <h2>Welcome, Researcher</h2>
+    <div class="labbox">
+      <strong>Your task:</strong> Review five case files and decide what the evidence can and cannot tell you.
+    </div>
+    <p>This prototype uses one simple content target: <strong>plants need water, sunlight, and air to grow.</strong></p>
+    <p>The science content remains stable. The access conditions change.</p>
+    <div class="evidence">
+      <strong>Guiding Question:</strong><br>
+      When a student answers incorrectly, what evidence do we need before making instructional or special education decisions?
+    </div>
+    <h3>Before You Begin</h3>
+    <p>Make a hypothesis:</p>
+    <div class="choice-big" onclick="hypothesis('same')">All students may know the science.</div>
+    <div class="choice-big" onclick="hypothesis('different')">Some students may have content gaps.</div>
+    <div class="choice-big" onclick="hypothesis('unknown')">One measure is insufficient.</div>
+    <div id="hypothesisBox" class="feedback">No hypothesis selected yet.</div>
+    <button class="primary" onclick="showFolders()">Open Case Files</button>
+  `;
+}
+
+function hypothesis(type){
+  const text = {
+    same:"Hypothesis recorded: The students may have similar science understanding, but different access to the assessment.",
+    different:"Hypothesis recorded: Some students may have content gaps, but more evidence is needed.",
+    unknown:"Hypothesis recorded: One assessment condition is not enough evidence."
+  };
+  document.getElementById("hypothesisBox").textContent = text[type];
+  setStatus("Hypothesis saved.", "file");
+}
+
+function showModules(){
+  setStatus("Module directory loaded.", "file");
+  document.getElementById("screen").innerHTML = `
+    <h2>GIDA Labs Module Directory</h2>
+    <p>This assignment includes a vertical slice of a larger professional development concept.</p>
+    <div class="row">
+      <div class="folder-card module-card" onclick="showFolders()"><strong>Module 001</strong><br><span class="badge">Available</span><p>Assessment Access</p></div>
+      <div class="folder-card module-card" onclick="showLanguageSamples()"><strong>Module 002</strong><br><span class="badge">Available</span><p>Language Samples</p></div>
+      <div class="folder-card module-card" onclick="showPortfolios()"><strong>Module 003</strong><br><span class="badge">Available</span><p>Student Portfolios</p></div>
+      <div class="folder-card module-card" onclick="showPeerAssessment()"><strong>Module 004</strong><br><span class="badge">Available</span><p>Peer Assessment</p></div>
+      <div class="folder-card module-card" onclick="showSelfAssessment()"><strong>Module 005</strong><br><span class="badge">Available</span><p>Self-Assessment Tools</p></div>
+    </div>
+    <div class="warning">All five GIDA Labs assessment modules are active: Assessment Access, Language Samples, Student Portfolios, Peer Assessment, and Self-Assessment Tools.</div>
+  `;
+}
+
+
+function showLanguageSamples(){
+  document.getElementById("screen").classList.remove("flash-access");
+  setStatus("Module 002: Language Samples opened.", "unlock");
+  document.getElementById("screen").innerHTML = `
+    <h2>Module 002: Language Samples</h2>
+    <div class="labbox">
+      <strong>Investigation focus:</strong> What can a student language sample tell us about language development, content understanding, and the supports a learner may need next?
+    </div>
+    <p>This module will use <strong>theoretical student work samples</strong> to practice interpreting evidence without overgeneralizing from a single response.</p>
+    <div class="evidence">
+      <strong>Guiding Question:</strong><br>
+      When we examine a student language sample, what can we reasonably conclude—and what additional evidence would we still need?
+    </div>
+    <button class="primary" onclick="openLanguageSampleA()">Open Sample 002-A: Oral Language</button>
+    <button onclick="openLanguageSampleB()">Open Sample 002-B: Written Language</button>
+    <button onclick="openLanguageSampleC()">Open Sample 002-C: Multimodal Language</button>
+    <button onclick="openLanguageSampleD()">Open Sample 002-D: Oral Language II</button>
+    <button onclick="openLanguageSampleE()">Open Sample 002-E: Written Language II</button>
+    <button onclick="openLanguageSampleF()">Open Sample 002-F: Multimodal Language II</button>
+    <h3>Language Sample Archive</h3>
+    <div class="row">
+      <div class="folder-card module-card" onclick="openLanguageSampleA()">
+        <strong>Sample 002-A</strong><br>
+        <span class="badge">Available</span>
+        <p>Oral Language</p>
+        <p class="smallnote">Theoretical kindergarten sample</p>
+      </div>
+      <div class="folder-card module-card" onclick="openLanguageSampleB()">
+        <strong>Sample 002-B</strong><br>
+        <span class="badge">Available</span>
+        <p>Written Language</p>
+        <p class="smallnote">Theoretical Grade 1 sample</p>
+      </div>
+      <div class="folder-card module-card" onclick="openLanguageSampleC()">
+        <strong>Sample 002-C</strong><br>
+        <span class="badge">Available</span>
+        <p>Multimodal Language</p>
+        <p class="smallnote">Theoretical kindergarten sample</p>
+      </div>
+      <div class="folder-card module-card" onclick="openLanguageSampleD()">
+        <strong>Sample 002-D</strong><br>
+        <span class="badge">Available</span>
+        <p>Oral Language II</p>
+        <p class="smallnote">Theoretical Grade 2 sample</p>
+      </div>
+      <div class="folder-card module-card" onclick="openLanguageSampleE()">
+        <strong>Sample 002-E</strong><br>
+        <span class="badge">Available</span>
+        <p>Written Language II</p>
+        <p class="smallnote">Theoretical Grade 2 sample</p>
+      </div>
+      <div class="folder-card module-card" onclick="openLanguageSampleF()">
+        <strong>Sample 002-F</strong><br>
+        <span class="badge">Available</span>
+        <p>Multimodal Language II</p>
+        <p class="smallnote">Theoretical Grade 1 sample</p>
+      </div>
+    </div>
+    <div class="warning">
+      Samples 002-A through 002-F are active. Module 002 now includes two oral, two written, and two multimodal language investigations.
+    </div>
+    <button onclick="showModules()">Back to Module Directory</button>
+  `;
+}
+
+let language002ASelected = new Set();
+
+function openLanguageSampleA(){
+  loadingThen(()=>renderLanguageSampleA(), "Opening oral language record...");
+}
+
+function renderLanguageSampleA(){
+  language002ASelected = new Set();
+  setStatus("Sample 002-A opened: Oral Language.", "file");
+  document.getElementById("screen").innerHTML = `
+    <h2>Sample 002-A: Oral Language</h2>
+    <span class="badge">Theoretical Case</span>
+    <span class="badge">Kindergarten</span>
+    <span class="badge">Spanish + English</span>
+
+    <div class="labbox">
+      <strong>Context:</strong> Lucía is a kindergarten multilingual learner. After observing classroom plants for several days, the teacher asks, “Tell me what you noticed about what plants need.”
+    </div>
+
+    <div class="step-label">STEP 1 — Examine the sample</div>
+    <div class="language-sample">
+      <div class="transcript-line"><strong>Teacher:</strong> Tell me what you noticed about what plants need.</div>
+      <div class="transcript-line"><strong>Lucía:</strong> The plant need agua and sun.</div>
+      <div class="transcript-line"><strong>Teacher:</strong> How do you know?</div>
+      <div class="transcript-line"><strong>Lucía:</strong> Because this one no water and it go like... down. Mira. The leaves down.</div>
+      <div class="transcript-line"><strong>Teacher:</strong> What happened after you watered it?</div>
+      <div class="transcript-line"><strong>Lucía:</strong> I put water, and next day it was up again. So water help it.</div>
+    </div>
+
+    <div class="evidence">
+      <strong>Investigator rule:</strong> Record what you can actually observe before deciding what it means.
+    </div>
+
+    <div class="step-label">STEP 2 — Select observable evidence</div>
+    <p>Select every statement that is directly supported by the transcript.</p>
+    <div id="languageObs">
+      <div class="observation-card" data-key="content" onclick="toggleLanguage002A(this,'content')">Lucía communicates that plants need water and sunlight.</div>
+      <div class="observation-card" data-key="cause" onclick="toggleLanguage002A(this,'cause')">Lucía uses <strong>because</strong> to connect an observation with a reason.</div>
+      <div class="observation-card" data-key="spanish" onclick="toggleLanguage002A(this,'spanish')">Lucía uses Spanish words within an otherwise English response.</div>
+      <div class="observation-card" data-key="grammar" onclick="toggleLanguage002A(this,'grammar')">Lucía’s English includes emerging grammatical forms such as “plant need” and “water help it.”</div>
+      <div class="observation-card" data-key="disability" onclick="toggleLanguage002A(this,'disability')">The sample proves Lucía has a language disability.</div>
+      <div class="observation-card" data-key="englishonly" onclick="toggleLanguage002A(this,'englishonly')">The sample proves Lucía should answer only in English from now on.</div>
+    </div>
+    <button class="primary" onclick="analyzeLanguage002A()">Analyze Selected Evidence</button>
+    <button onclick="showLanguageSamples()">Back to Language Sample Archive</button>
+    <div id="language002AFeedback" class="feedback">No evidence analyzed yet.</div>
+  `;
+}
+
+function toggleLanguage002A(card,key){
+  if(language002ASelected.has(key)){
+    language002ASelected.delete(key);
+    card.classList.remove("selected");
+  }else{
+    language002ASelected.add(key);
+    card.classList.add("selected");
+  }
+}
+
+function analyzeLanguage002A(){
+  const supported = ["content","cause","spanish","grammar"];
+  const unsupported = ["disability","englishonly"];
+  const chosen = Array.from(language002ASelected);
+  const choseUnsupported = chosen.some(k=>unsupported.includes(k));
+  const supportedCount = chosen.filter(k=>supported.includes(k)).length;
+
+  let headline = "Keep examining the evidence.";
+  let cls = "warning";
+  if(!choseUnsupported && supportedCount===supported.length){
+    headline = "Strong evidence reading.";
+    cls = "correct";
+    beep("complete");
+  }else if(choseUnsupported){
+    headline = "Observation and interpretation have been mixed together.";
+    cls = "incorrect";
+    beep("error");
+  }else{
+    beep("file");
+  }
+
+  setStatus("Sample 002-A evidence analyzed.", choseUnsupported ? "error" : "file");
+  document.getElementById("language002AFeedback").innerHTML = `
+    <div class="${cls}" style="padding:10px;border:1px solid #8a999f;"><strong>${headline}</strong></div>
+    <div class="evidence">
+      <strong>What this sample supports:</strong><br>
+      Lucía communicates relevant science knowledge, uses causal language, draws from Spanish and English, and shows emerging English grammatical development.
+    </div>
+    <div class="warning">
+      <strong>What this sample does not establish:</strong><br>
+      It does not diagnose a disability, establish an English proficiency level by itself, or show that Spanish is interfering with learning.
+    </div>
+    <h3>What should the teacher do next?</h3>
+    <div class="choice-big" onclick="language002ANext('correct')">Collect another language sample in a different context.</div>
+    <div class="choice-big" onclick="language002ANext('expand')">Model and expand Lucía’s sentence while preserving her meaning.</div>
+    <div class="choice-big" onclick="language002ANext('ban')">Require English-only responses to prevent mixing languages.</div>
+    <div class="choice-big" onclick="language002ANext('diagnose')">Refer immediately based on the grammar in this sample.</div>
+    <div id="language002ANextBox" class="feedback">Choose a next step.</div>
+  `;
+}
+
+function language002ANext(choice){
+  const responses = {
+    correct:"Strong next step. A second sample helps determine whether the observed language features are consistent across tasks and settings.",
+    expand:"Strong instructional move. A teacher might recast ‘The plant need agua and sun’ as ‘Yes—the plant needs water and sunlight,’ adding English without erasing the student’s meaning.",
+    ban:"This would reduce access to Lucía’s full linguistic repertoire and would not make this single sample more diagnostically valid.",
+    diagnose:"A single classroom language sample cannot establish disability. Additional evidence across time, contexts, languages, and tasks would be needed."
+  };
+  const good = choice==="correct" || choice==="expand";
+  const box=document.getElementById("language002ANextBox");
+  box.className=`feedback ${good ? 'correct' : 'incorrect'}`;
+  box.innerHTML=`${responses[choice]}<br><br><button onclick="showLanguage002AInterpretation()">Continue to Interpretation</button>`;
+  beep(good ? "complete" : "error");
+}
+
+function showLanguage002AInterpretation(){
+  setStatus("Sample 002-A interpretation opened.", "unlock");
+  document.getElementById("screen").innerHTML = `
+    <h2>Sample 002-A: Interpretation Record</h2>
+    <div class="notebook">
+      <strong>Observable evidence</strong><br><br>
+      • Communicates plant needs: water and sunlight.<br>
+      • Uses causal language: “because.”<br>
+      • Describes change across time: “next day.”<br>
+      • Uses Spanish and English strategically within one response.<br>
+      • Uses emerging English morphology and syntax while maintaining comprehensible meaning.
+    </div>
+    <div class="evidence">
+      <strong>Reasonable interpretation:</strong><br>
+      The sample provides evidence of content understanding and developing oral academic language. The mixed-language response is evidence of meaning-making, not by itself evidence of confusion or impairment.
+    </div>
+    <div class="warning">
+      <strong>Still needed:</strong> Additional samples across settings and language functions; observation of comprehension; opportunities to respond in both languages when possible; and evidence collected over time.
+    </div>
+    <h3>Evidence Coding</h3>
+    <span class="code-chip">Content knowledge</span>
+    <span class="code-chip">Cause / reason</span>
+    <span class="code-chip">Sequence / time</span>
+    <span class="code-chip">Translanguaging</span>
+    <span class="code-chip">Emerging English grammar</span>
+    <div class="labbox">
+      <strong>Module 002 principle:</strong> A language sample becomes more useful when we separate <em>what the student communicated</em>, <em>how the student communicated it</em>, and <em>what additional evidence we still need</em>.
+    </div>
+    <button class="primary" onclick="renderLanguageSampleA()">Review Sample Again</button>
+    <button onclick="showLanguageSamples()">Back to Language Sample Archive</button>
+    <button onclick="showModules()">Back to Module Directory</button>
+  `;
+}
+
+
+let language002BSelected = new Set();
+
+function openLanguageSampleB(){
+  loadingThen(()=>renderLanguageSampleB(), "Opening written language record...");
+}
+
+function renderLanguageSampleB(){
+  language002BSelected = new Set();
+  setStatus("Sample 002-B opened: Written Language.", "file");
+  document.getElementById("screen").innerHTML = `
+    <h2>Sample 002-B: Written Language</h2>
+    <span class="badge">Theoretical Case</span>
+    <span class="badge">Grade 1</span>
+    <span class="badge">Vietnamese + English</span>
+
+    <div class="labbox">
+      <strong>Context:</strong> Minh is a first-grade multilingual learner. After a class investigation with two plants, the teacher gives the prompt: <em>“Explain what a plant needs to grow and how you know.”</em> Students may draw first, but the teacher initially reviews only the written response.
+    </div>
+
+    <div class="step-label">STEP 1 — Examine the writing by itself</div>
+    <div class="language-sample" style="background:#fffdf4;">
+      <div class="smallnote">Student writing reproduced as a theoretical sample:</div>
+      <div style="font-family:'Comic Sans MS','Trebuchet MS',sans-serif;font-size:1.45rem;line-height:1.7;padding:14px;border:2px dashed #9b8f72;background:white;margin-top:8px;">
+        plant ned wotr. sun.<br>
+        it gro.
+      </div>
+    </div>
+
+    <div class="evidence">
+      <strong>Investigator rule:</strong> Treat spelling, conventions, language development, and content knowledge as related—but not interchangeable—sources of evidence.
+    </div>
+
+    <div class="step-label">STEP 2 — What does the writing alone support?</div>
+    <p>Select every statement that is directly supported by this written sample.</p>
+    <div id="languageBObs">
+      <div class="observation-card" onclick="toggleLanguage002B(this,'needs')">Minh identifies water and sunlight as plant needs.</div>
+      <div class="observation-card" onclick="toggleLanguage002B(this,'phonetic')">Minh uses emerging sound-based English spelling such as “ned,” “wotr,” and “gro.”</div>
+      <div class="observation-card" onclick="toggleLanguage002B(this,'brief')">The written response is brief and does not explicitly explain how Minh knows.</div>
+      <div class="observation-card" onclick="toggleLanguage002B(this,'weakscience')">The sample proves Minh has weak science understanding.</div>
+      <div class="observation-card" onclick="toggleLanguage002B(this,'nocause')">The sample proves Minh cannot explain cause and effect.</div>
+    </div>
+
+    <button class="primary" onclick="analyzeLanguage002B()">Analyze the Writing</button>
+    <button onclick="showLanguageSamples()">Back to Language Sample Archive</button>
+    <div id="language002BFeedback" class="feedback">No evidence analyzed yet.</div>
+  `;
+}
+
+function toggleLanguage002B(card,key){
+  if(language002BSelected.has(key)){
+    language002BSelected.delete(key);
+    card.classList.remove("selected");
+  }else{
+    language002BSelected.add(key);
+    card.classList.add("selected");
+  }
+}
+
+function analyzeLanguage002B(){
+  const supported = ["needs","phonetic","brief"];
+  const unsupported = ["weakscience","nocause"];
+  const chosen = Array.from(language002BSelected);
+  const choseUnsupported = chosen.some(k=>unsupported.includes(k));
+  const supportedCount = chosen.filter(k=>supported.includes(k)).length;
+
+  let headline = "Keep separating evidence from inference.";
+  let cls = "warning";
+  if(!choseUnsupported && supportedCount===supported.length){
+    headline = "Strong reading of the written evidence.";
+    cls = "correct";
+    beep("complete");
+  }else if(choseUnsupported){
+    headline = "The writing has been asked to prove more than it can.";
+    cls = "incorrect";
+    beep("error");
+  }else{
+    beep("file");
+  }
+
+  setStatus("Sample 002-B writing analyzed.", choseUnsupported ? "error" : "file");
+  document.getElementById("language002BFeedback").innerHTML = `
+    <div class="${cls}" style="padding:10px;border:1px solid #8a999f;"><strong>${headline}</strong></div>
+    <div class="evidence">
+      <strong>What the writing supports:</strong><br>
+      Minh names two relevant plant needs and is using emerging English spelling to represent words independently.
+    </div>
+    <div class="warning">
+      <strong>What remains uncertain:</strong><br>
+      The short response does not tell us whether Minh lacks the science explanation, lacks the English needed to express it in writing, is still developing transcription skills, or simply interpreted the prompt narrowly.
+    </div>
+    <button class="primary" onclick="revealLanguage002BEvidence()">Reveal Additional Evidence</button>
+  `;
+}
+
+function revealLanguage002BEvidence(){
+  setStatus("Additional evidence revealed for Sample 002-B.", "unlock");
+  document.getElementById("screen").innerHTML = `
+    <h2>Sample 002-B: Additional Evidence</h2>
+    <span class="badge">Same Student</span>
+    <span class="badge">Same Science Concept</span>
+
+    <div class="step-label">STEP 3 — Add the drawing</div>
+    <div class="language-sample" style="background:#fff;">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:center;">
+        <div style="font-size:4rem;text-align:center;line-height:1.1;">☀️<br>🌱<br>💧</div>
+        <div>
+          <strong>Teacher notes from Minh's drawing:</strong><br><br>
+          • sun drawn above the plant<br>
+          • water drops drawn toward the soil<br>
+          • roots shown below the soil line<br>
+          • arrows connect water → roots → plant
+        </div>
+      </div>
+    </div>
+
+    <div class="step-label">STEP 4 — Add a brief teacher conference</div>
+    <div class="language-sample">
+      <div class="transcript-line"><strong>Teacher:</strong> Tell me about your drawing.</div>
+      <div class="transcript-line"><strong>Minh:</strong> Water go in soil. Roots get the water.</div>
+      <div class="transcript-line"><strong>Teacher:</strong> What does the sun do?</div>
+      <div class="transcript-line"><strong>Minh:</strong> Sun help it grow. When no water, leaves go down. Then we give water and it come up.</div>
+    </div>
+
+    <div class="evidence">
+      <strong>Reconsider the original paper:</strong> The written sentence did not change. The evidence base did.
+    </div>
+
+    <h3>Which conclusion is best supported now?</h3>
+    <div class="choice-big" onclick="language002BReconsider('underestimate')">The writing alone underestimated the amount of science understanding Minh could communicate.</div>
+    <div class="choice-big" onclick="language002BReconsider('ignorewriting')">Because the oral explanation is stronger, the teacher should ignore written-language development.</div>
+    <div class="choice-big" onclick="language002BReconsider('same')">The original conclusion should remain unchanged because only independent writing counts as evidence.</div>
+    <div class="choice-big" onclick="language002BReconsider('lower')">Minh's science score should primarily reflect English spelling accuracy.</div>
+    <div id="language002BReconsiderBox" class="feedback">Choose the best-supported conclusion.</div>
+
+    <button onclick="renderLanguageSampleB()">Return to Writing-Only View</button>
+  `;
+}
+
+function language002BReconsider(choice){
+  const responses = {
+    underestimate:"Exactly. The drawing and conference reveal relationships that were not visible in the brief written response. The written sample remains useful evidence—but it is not the whole evidence base.",
+    ignorewriting:"The oral evidence does not erase the written sample. Minh still needs opportunities to develop English spelling, sentence expansion, and written explanation. Those needs should be taught without being mistaken for weak science knowledge.",
+    same:"Independent writing is one important source of evidence, but relying on it alone would miss content knowledge demonstrated through other appropriate modes.",
+    lower:"If the learning target is science understanding, spelling accuracy should not become the dominant measure unless spelling is itself part of the target."
+  };
+  const good = choice==="underestimate";
+  const box=document.getElementById("language002BReconsiderBox");
+  box.className=`feedback ${good ? 'correct' : 'incorrect'}`;
+  box.innerHTML=`${responses[choice]}<br><br><button onclick="showLanguage002BNextStep()">Continue</button>`;
+  beep(good ? "complete" : "error");
+}
+
+function showLanguage002BNextStep(){
+  setStatus("Sample 002-B instructional decision opened.", "file");
+  document.getElementById("screen").innerHTML = `
+    <h2>Sample 002-B: Instructional Decision</h2>
+
+    <div class="labbox">
+      <strong>Assessment question:</strong> How can the teacher respond to the written-language need without lowering the level of science thinking expected from Minh?
+    </div>
+
+    <div class="choice-big" onclick="language002BNext('expand')">Invite Minh to orally rehearse a complete explanation, then help him expand the writing with a sentence frame such as “Plants need ___ because ___.”</div>
+    <div class="choice-big" onclick="language002BNext('separate')">Record science-content evidence separately from written-language evidence, while providing instruction in both.</div>
+    <div class="choice-big" onclick="language002BNext('copy')">Replace the task with copying a teacher-written sentence so the final paper is conventionally correct.</div>
+    <div class="choice-big" onclick="language002BNext('simplify')">Give Minh easier science questions until his English spelling catches up.</div>
+
+    <div id="language002BNextBox" class="feedback">Choose an instructional response.</div>
+    <button onclick="revealLanguage002BEvidence()">Back to Additional Evidence</button>
+  `;
+}
+
+function language002BNext(choice){
+  const responses = {
+    expand:"Strong choice. Oral rehearsal and a sentence frame can bridge from what Minh can already explain toward a more complete written response.",
+    separate:"Strong assessment practice. The teacher can document a science strength and a written-language need at the same time rather than collapsing both into one judgment.",
+    copy:"Copying may produce a cleaner paper, but it provides little evidence of Minh's independent language development or science reasoning.",
+    simplify:"Language development should not automatically reduce the cognitive demand of the content task. Access and scaffolding are preferable to lowering the learning target."
+  };
+  const good = choice==="expand" || choice==="separate";
+  const box=document.getElementById("language002BNextBox");
+  box.className=`feedback ${good ? 'correct' : 'incorrect'}`;
+  box.innerHTML=`${responses[choice]}<br><br><button onclick="showLanguage002BInterpretation()">Continue to Interpretation Record</button>`;
+  beep(good ? "complete" : "error");
+}
+
+function showLanguage002BInterpretation(){
+  setStatus("Sample 002-B interpretation opened.", "unlock");
+  document.getElementById("screen").innerHTML = `
+    <h2>Sample 002-B: Interpretation Record</h2>
+
+    <div class="notebook">
+      <strong>Written-language evidence</strong><br><br>
+      • Names water and sunlight.<br>
+      • Uses emerging sound-based English spelling.<br>
+      • Produces a brief written response with limited elaboration.<br>
+      • Does not independently express the causal explanation in writing yet.
+    </div>
+
+    <div class="evidence">
+      <strong>Content evidence added through drawing and oral language:</strong><br>
+      Minh connects water with roots and soil, identifies sunlight as supporting growth, and describes what happened to an unwatered plant and after watering resumed.
+    </div>
+
+    <div class="warning">
+      <strong>Still needed:</strong> Additional independent writing across time and purposes; opportunities to rehearse ideas orally before writing; observation of reading and spelling development; and comparison with other language samples before making broader conclusions.
+    </div>
+
+    <h3>Evidence Coding</h3>
+    <span class="code-chip">Content knowledge</span>
+    <span class="code-chip">Written language</span>
+    <span class="code-chip">Phonetic spelling</span>
+    <span class="code-chip">Oral rehearsal</span>
+    <span class="code-chip">Multiple modalities</span>
+    <span class="code-chip">Assessment validity</span>
+
+    <div class="labbox">
+      <strong>Module 002 principle:</strong> A short written product may accurately show what a student can currently express <em>in writing</em> without accurately representing everything the student understands about the content.
+    </div>
+
+    <button class="primary" onclick="renderLanguageSampleB()">Review Sample Again</button>
+    <button onclick="showLanguageSamples()">Back to Language Sample Archive</button>
+    <button onclick="showModules()">Back to Module Directory</button>
+  `;
+}
+
+
+let language002CSelected = new Set();
+
+function openLanguageSampleC(){
+  loadingThen(()=>renderLanguageSampleC(), "Opening multimodal language record...");
+}
+
+function renderLanguageSampleC(){
+  language002CSelected = new Set();
+  setStatus("Sample 002-C opened: Multimodal Language.", "file");
+  document.getElementById("screen").innerHTML = `
+    <h2>Sample 002-C: Multimodal Language</h2>
+    <span class="badge">Theoretical Case</span>
+    <span class="badge">Kindergarten</span>
+    <span class="badge">Arabic + English</span>
+
+    <div class="labbox">
+      <strong>Context:</strong> Samira is a kindergarten multilingual learner. After observing a classroom plant over several days, the teacher asks students to show what happens when a plant does not get enough water. Students may use drawing, gesture, labels, home language, and spoken English.
+    </div>
+
+    <div class="step-label">STEP 1 — Examine the multimodal response</div>
+
+    <div class="language-sample" style="background:#fff;">
+      <div style="display:grid;grid-template-columns:1.05fr .95fr;gap:18px;align-items:center;">
+        <div style="border:2px dashed #7a8c96;padding:14px;background:#fffdf7;">
+          <div class="smallnote">Theoretical student artifact</div>
+          <div style="font-size:1.1rem;line-height:1.55;margin-top:8px;">
+            ☀️ &nbsp;&nbsp;&nbsp; 🌱<br><br>
+            💧 → <span style="font-size:2.1rem;">🌱</span><br>
+            <span style="margin-left:88px;">↓</span><br>
+            <span style="margin-left:68px;font-size:2rem;">🥀</span><br><br>
+            Label near the water: <strong>ماء</strong> <span class="smallnote">(Arabic: water)</span><br>
+            Label near the plant: <strong>water</strong>
+          </div>
+        </div>
+        <div>
+          <strong>Teacher observation notes:</strong><br><br>
+          • Samira points to the water drop, then the roots.<br>
+          • She moves one hand upward while saying, “water... grow.”<br>
+          • She points to the wilted plant and says, “no water,” then lets her hand droop downward.<br>
+          • When the teacher asks “What happens next?” Samira says, “give water,” and moves her hand upward again.
+        </div>
+      </div>
+    </div>
+
+    <div class="evidence">
+      <strong>Investigator rule:</strong> Meaning can be distributed across modes. Do not evaluate the drawing, gesture, home-language label, and English words as though each must independently carry the entire explanation.
+    </div>
+
+    <div class="step-label">STEP 2 — What is directly observable?</div>
+    <p>Select every statement supported by the combined evidence.</p>
+
+    <div id="languageCObs">
+      <div class="observation-card" onclick="toggleLanguage002C(this,'water')">Samira connects water with plant growth.</div>
+      <div class="observation-card" onclick="toggleLanguage002C(this,'change')">Samira represents a plant drooping when water is absent and recovering after water is given.</div>
+      <div class="observation-card" onclick="toggleLanguage002C(this,'modes')">Samira communicates across drawing, gesture, Arabic labeling, and English words.</div>
+      <div class="observation-card" onclick="toggleLanguage002C(this,'completeenglish')">Samira has demonstrated complete grade-level English sentence production.</div>
+      <div class="observation-card" onclick="toggleLanguage002C(this,'confusion')">Using Arabic proves Samira is confused about the science concept.</div>
+    </div>
+
+    <button class="primary" onclick="analyzeLanguage002C()">Analyze Multimodal Evidence</button>
+    <button onclick="showLanguageSamples()">Back to Language Sample Archive</button>
+
+    <div id="language002CFeedback" class="feedback">No evidence analyzed yet.</div>
+  `;
+}
+
+function toggleLanguage002C(card,key){
+  if(language002CSelected.has(key)){
+    language002CSelected.delete(key);
+    card.classList.remove("selected");
+  }else{
+    language002CSelected.add(key);
+    card.classList.add("selected");
+  }
+}
+
+function analyzeLanguage002C(){
+  const supported = ["water","change","modes"];
+  const unsupported = ["completeenglish","confusion"];
+  const chosen = Array.from(language002CSelected);
+  const choseUnsupported = chosen.some(k=>unsupported.includes(k));
+  const supportedCount = chosen.filter(k=>supported.includes(k)).length;
+
+  let headline = "Keep the modes together while interpreting the evidence.";
+  let cls = "warning";
+
+  if(!choseUnsupported && supportedCount===supported.length){
+    headline = "Strong multimodal evidence reading.";
+    cls = "correct";
+    beep("complete");
+  }else if(choseUnsupported){
+    headline = "One mode has been mistaken for the whole learner.";
+    cls = "incorrect";
+    beep("error");
+  }else{
+    beep("file");
+  }
+
+  setStatus("Sample 002-C evidence analyzed.", choseUnsupported ? "error" : "file");
+  document.getElementById("language002CFeedback").innerHTML = `
+    <div class="${cls}" style="padding:10px;border:1px solid #8a999f;"><strong>${headline}</strong></div>
+
+    <div class="evidence">
+      <strong>What the combined evidence supports:</strong><br>
+      Samira communicates a relationship between water and plant condition. Her drawing, gesture, home-language label, and English words work together to carry meaning.
+    </div>
+
+    <div class="warning">
+      <strong>What the evidence does not establish:</strong><br>
+      This response does not demonstrate complete English oral proficiency, and the presence of Arabic does not indicate conceptual confusion. The task provides evidence about content understanding and communication strategy, but broader language conclusions require additional samples.
+    </div>
+
+    <button class="primary" onclick="showLanguage002CModeChallenge()">Continue: Remove a Mode</button>
+  `;
+}
+
+function showLanguage002CModeChallenge(){
+  setStatus("Sample 002-C mode challenge opened.", "file");
+  document.getElementById("screen").innerHTML = `
+    <h2>Sample 002-C: What Happens When a Mode Is Removed?</h2>
+
+    <div class="labbox">
+      <strong>Investigation:</strong> Imagine the teacher records only Samira's spoken English and ignores the drawing, gesture, and Arabic label.
+    </div>
+
+    <div class="language-sample">
+      <div class="transcript-line"><strong>Recorded English only:</strong> “water... grow.”</div>
+      <div class="transcript-line"><strong>Recorded English only:</strong> “no water.”</div>
+      <div class="transcript-line"><strong>Recorded English only:</strong> “give water.”</div>
+    </div>
+
+    <h3>How would this change the evidence?</h3>
+
+    <div class="choice-big" onclick="language002CModeChoice('reduced')">It would reduce the amount of meaning available for interpretation and could make Samira's science understanding appear less developed than the full response suggests.</div>
+    <div class="choice-big" onclick="language002CModeChoice('same')">It would make no meaningful difference because spoken English is the only valid evidence of understanding.</div>
+    <div class="choice-big" onclick="language002CModeChoice('better')">It would improve validity because home-language labels and gesture should be excluded from academic assessment.</div>
+    <div class="choice-big" onclick="language002CModeChoice('proficiency')">It would prove Samira is not ready for grade-level science content.</div>
+
+    <div id="language002CModeBox" class="feedback">Choose the best-supported interpretation.</div>
+
+    <button onclick="renderLanguageSampleC()">Return to Full Multimodal Sample</button>
+  `;
+}
+
+function language002CModeChoice(choice){
+  const responses = {
+    reduced:"Exactly. The English-only record preserves some evidence, but it removes information Samira communicated through other modes. If the content target is science understanding, excluding those modes can reduce the validity of the interpretation.",
+    same:"Spoken English can be important evidence, but it is not automatically the only valid mode for demonstrating content understanding.",
+    better:"Excluding meaning-bearing modes can make an assessment less representative of what a multilingual learner understands, especially when those modes are allowed by the task.",
+    proficiency:"A brief English sample cannot establish readiness for grade-level science. Language production and conceptual demand should not be collapsed into one judgment."
+  };
+
+  const good = choice==="reduced";
+  const box=document.getElementById("language002CModeBox");
+  box.className=`feedback ${good ? 'correct' : 'incorrect'}`;
+  box.innerHTML=`${responses[choice]}<br><br><button onclick="showLanguage002CTeacherDecision()">Continue</button>`;
+  beep(good ? "complete" : "error");
+}
+
+function showLanguage002CTeacherDecision(){
+  setStatus("Sample 002-C instructional decision opened.", "file");
+  document.getElementById("screen").innerHTML = `
+    <h2>Sample 002-C: Teacher Decision</h2>
+
+    <div class="labbox">
+      <strong>Assessment question:</strong> How can the teacher preserve access while still supporting English language development?
+    </div>
+
+    <div class="choice-big" onclick="language002CTeacherChoice('bridge')">Acknowledge the full response, then bridge it into English by recasting and expanding: “Yes. The plant needs water to grow. Without water, the leaves droop.”</div>
+    <div class="choice-big" onclick="language002CTeacherChoice('record')">Document the modes Samira used and note which scientific ideas were communicated through each one.</div>
+    <div class="choice-big" onclick="language002CTeacherChoice('englishonly')">Repeat the task and require English-only responses so the evidence is easier to score.</div>
+    <div class="choice-big" onclick="language002CTeacherChoice('drawingonly')">Stop asking Samira to speak because the drawing already shows enough.</div>
+
+    <div id="language002CTeacherBox" class="feedback">Choose an instructional response.</div>
+
+    <button onclick="showLanguage002CModeChallenge()">Back to Mode Challenge</button>
+  `;
+}
+
+function language002CTeacherChoice(choice){
+  const responses = {
+    bridge:"Strong choice. The teacher preserves the meaning Samira communicated while modeling a fuller English form connected to her own idea.",
+    record:"Strong assessment practice. Recording where the evidence appears helps the teacher distinguish content knowledge from language form and plan next instruction.",
+    englishonly:"An English-only repetition may measure a narrower construct than intended and can discard valid evidence already demonstrated through other modes.",
+    drawingonly:"The goal is not to replace one mode with another. Samira benefits from continued opportunities to develop oral English while using multiple modes to communicate complex ideas."
+  };
+
+  const good = choice==="bridge" || choice==="record";
+  const box=document.getElementById("language002CTeacherBox");
+  box.className=`feedback ${good ? 'correct' : 'incorrect'}`;
+  box.innerHTML=`${responses[choice]}<br><br><button onclick="showLanguage002CInterpretation()">Continue to Interpretation Record</button>`;
+  beep(good ? "complete" : "error");
+}
+
+function showLanguage002CInterpretation(){
+  setStatus("Sample 002-C interpretation opened.", "unlock");
+  document.getElementById("screen").innerHTML = `
+    <h2>Sample 002-C: Interpretation Record</h2>
+
+    <div class="notebook">
+      <strong>Meaning communicated across modes</strong><br><br>
+      • Water is connected to plant growth.<br>
+      • Lack of water is associated with drooping.<br>
+      • Adding water is associated with recovery.<br>
+      • Samira coordinates drawing, gesture, Arabic labeling, and emerging English to communicate the explanation.
+    </div>
+
+    <div class="evidence">
+      <strong>Reasonable interpretation:</strong><br>
+      The multimodal response provides stronger evidence of Samira's science understanding than any one mode does alone. Her English production is still emerging, but the content relationship is visible across the combined evidence.
+    </div>
+
+    <div class="warning">
+      <strong>Still needed:</strong><br>
+      Additional oral and written samples across contexts; opportunities to use English in increasingly extended ways; information about how Samira communicates in other classroom tasks; and repeated evidence before making broader judgments about language development.
+    </div>
+
+    <h3>Evidence Coding</h3>
+    <span class="code-chip">Content knowledge</span>
+    <span class="code-chip">Multimodality</span>
+    <span class="code-chip">Gesture</span>
+    <span class="code-chip">Home language</span>
+    <span class="code-chip">Emerging English</span>
+    <span class="code-chip">Assessment validity</span>
+
+    <div class="labbox">
+      <strong>Module 002 principle:</strong> Multimodal evidence is not “extra” evidence when meaning is genuinely distributed across modes. It may be the evidence that makes a student's thinking visible.
+    </div>
+
+    <button class="primary" onclick="renderLanguageSampleC()">Review Sample Again</button>
+    <button onclick="showLanguageSamples()">Back to Language Sample Archive</button>
+    <button onclick="showModules()">Back to Module Directory</button>
+  `;
+}
+
+
+/* =========================================================
+   SAMPLE 002-D — ORAL LANGUAGE II
+   ========================================================= */
+let language002DSelected = new Set();
+
+function openLanguageSampleD(){
+  loadingThen(()=>renderLanguageSampleD(), "Opening second oral language record...");
+}
+
+function renderLanguageSampleD(){
+  language002DSelected = new Set();
+  setStatus("Sample 002-D opened: Oral Language II.", "file");
+  document.getElementById("screen").innerHTML = `
+    <h2>Sample 002-D: Oral Language II</h2>
+    <span class="badge">Theoretical Case</span>
+    <span class="badge">Grade 2</span>
+    <span class="badge">Somali + English</span>
+
+    <div class="labbox">
+      <strong>Context:</strong> Ayaan is a second-grade multilingual learner. During a science discussion about evaporation, the teacher asks, “Why did the puddle get smaller even though nobody wiped it up?”
+    </div>
+
+    <div class="step-label">STEP 1 — Listen to the sample</div>
+    <div class="language-sample">
+      <div class="transcript-line"><strong>Teacher:</strong> Why did the puddle get smaller?</div>
+      <div class="transcript-line"><strong>Ayaan:</strong> The sun make it... it go up.</div>
+      <div class="transcript-line"><strong>Teacher:</strong> What goes up?</div>
+      <div class="transcript-line"><strong>Ayaan:</strong> The water. Not like the whole water. Little, little... you cannot see. It go in air.</div>
+      <div class="transcript-line"><strong>Teacher:</strong> What would happen on a colder day?</div>
+      <div class="transcript-line"><strong>Ayaan:</strong> Maybe more slow because not too much heat.</div>
+    </div>
+
+    <div class="evidence">
+      <strong>Investigator rule:</strong> Attend to the scientific relationships the student communicates, not only the grammatical completeness of the sentences.
+    </div>
+
+    <div class="step-label">STEP 2 — What is observable?</div>
+    <p>Select every claim directly supported by the sample.</p>
+    <div id="languageDObs">
+      <div class="observation-card" onclick="toggleLanguage002D(this,'cause')">Ayaan links heat from the sun with water leaving the puddle.</div>
+      <div class="observation-card" onclick="toggleLanguage002D(this,'invisible')">Ayaan distinguishes visible liquid water from water that is no longer visible.</div>
+      <div class="observation-card" onclick="toggleLanguage002D(this,'temperature')">Ayaan predicts slower change with less heat.</div>
+      <div class="observation-card" onclick="toggleLanguage002D(this,'mastery')">Ayaan has demonstrated complete mastery of academic English.</div>
+      <div class="observation-card" onclick="toggleLanguage002D(this,'confused')">Because Ayaan says “the sun make it,” the science concept is probably confused.</div>
+    </div>
+
+    <button class="primary" onclick="analyzeLanguage002D()">Analyze Oral Evidence</button>
+    <button onclick="showLanguageSamples()">Back to Language Sample Archive</button>
+    <div id="language002DFeedback" class="feedback">No evidence analyzed yet.</div>
+  `;
+}
+
+function toggleLanguage002D(card,key){
+  if(language002DSelected.has(key)){
+    language002DSelected.delete(key);
+    card.classList.remove("selected");
+  }else{
+    language002DSelected.add(key);
+    card.classList.add("selected");
+  }
+}
+
+function analyzeLanguage002D(){
+  const supported=["cause","invisible","temperature"];
+  const unsupported=["mastery","confused"];
+  const chosen=Array.from(language002DSelected);
+  const bad=chosen.some(k=>unsupported.includes(k));
+  const count=chosen.filter(k=>supported.includes(k)).length;
+
+  let headline="Keep separating language form from scientific reasoning.";
+  let cls="warning";
+  if(!bad && count===supported.length){
+    headline="Strong interpretation of the oral evidence.";
+    cls="correct";
+    beep("complete");
+  }else if(bad){
+    headline="The language form has been overinterpreted.";
+    cls="incorrect";
+    beep("error");
+  }else{
+    beep("file");
+  }
+
+  document.getElementById("language002DFeedback").innerHTML=`
+    <div class="${cls}" style="padding:10px;border:1px solid #8a999f;"><strong>${headline}</strong></div>
+    <div class="evidence">
+      <strong>What the sample supports:</strong><br>
+      Ayaan communicates causal reasoning about heat, invisible water in the air, and a temperature-based prediction.
+    </div>
+    <div class="warning">
+      <strong>What remains separate:</strong><br>
+      His English morphology and syntax are still developing. Those language features are real instructional data, but they do not erase the scientific relationships he communicated.
+    </div>
+    <button class="primary" onclick="showLanguage002DDecision()">Continue to Teacher Decision</button>
+  `;
+}
+
+function showLanguage002DDecision(){
+  document.getElementById("screen").innerHTML=`
+    <h2>Sample 002-D: Teacher Decision</h2>
+    <div class="labbox">
+      <strong>Question:</strong> Which response best advances both science reasoning and academic English?
+    </div>
+
+    <div class="choice-big" onclick="language002DDecision('recast')">Recast Ayaan's idea and invite him to repeat or extend it: “The sun heats the water, and some of the water evaporates into the air. What might happen when there is less heat?”</div>
+    <div class="choice-big" onclick="language002DDecision('record')">Record the science reasoning separately from the English language features to guide both content and language instruction.</div>
+    <div class="choice-big" onclick="language002DDecision('correct')">Interrupt each grammatical error immediately so the science answer is produced in complete English before continuing.</div>
+    <div class="choice-big" onclick="language002DDecision('easier')">Give Ayaan a simpler science question because his English sentences are incomplete.</div>
+
+    <div id="language002DDecisionBox" class="feedback">Choose an instructional response.</div>
+    <button onclick="renderLanguageSampleD()">Back to Oral Sample</button>
+  `;
+}
+
+function language002DDecision(choice){
+  const responses={
+    recast:"Strong choice. Recasting preserves Ayaan's scientific idea while supplying more precise academic English connected to meaning.",
+    record:"Strong assessment practice. One sample can yield both content evidence and language-development evidence without collapsing them into one score.",
+    correct:"Frequent interruption can shift the task from scientific reasoning to error correction and may reduce the amount of language the student is willing to produce.",
+    easier:"Developing English does not by itself justify reducing the cognitive demand of the science task."
+  };
+  const good=choice==="recast" || choice==="record";
+  const box=document.getElementById("language002DDecisionBox");
+  box.className=`feedback ${good ? 'correct' : 'incorrect'}`;
+  box.innerHTML=`${responses[choice]}<br><br><button onclick="showLanguage002DInterpretation()">Continue to Interpretation Record</button>`;
+  beep(good ? "complete" : "error");
+}
+
+function showLanguage002DInterpretation(){
+  document.getElementById("screen").innerHTML=`
+    <h2>Sample 002-D: Interpretation Record</h2>
+    <div class="notebook">
+      <strong>Oral-language evidence</strong><br><br>
+      • Communicates causal and predictive relationships.<br>
+      • Uses precise meaning even when grammar is emerging.<br>
+      • Sustains a short content conversation with prompting.<br>
+      • Benefits from recasts and opportunities to extend academic language.
+    </div>
+    <div class="labbox">
+      <strong>Module 002 principle:</strong> Grammatical incompleteness and conceptual incompleteness are not the same thing.
+    </div>
+    <button class="primary" onclick="renderLanguageSampleD()">Review Sample Again</button>
+    <button onclick="showLanguageSamples()">Back to Language Sample Archive</button>
+  `;
+}
+
+/* =========================================================
+   SAMPLE 002-E — WRITTEN LANGUAGE II
+   ========================================================= */
+let language002ESelected = new Set();
+
+function openLanguageSampleE(){
+  loadingThen(()=>renderLanguageSampleE(), "Opening second written language record...");
+}
+
+function renderLanguageSampleE(){
+  language002ESelected = new Set();
+  setStatus("Sample 002-E opened: Written Language II.", "file");
+  document.getElementById("screen").innerHTML=`
+    <h2>Sample 002-E: Written Language II</h2>
+    <span class="badge">Theoretical Case</span>
+    <span class="badge">Grade 2</span>
+    <span class="badge">Spanish + English</span>
+
+    <div class="labbox">
+      <strong>Context:</strong> Mateo is a second-grade multilingual learner. After reading a story in which a character loses a library book and later admits what happened, students respond to: <em>“Explain how the character solves the problem and what the character learns.”</em>
+    </div>
+
+    <div class="step-label">STEP 1 — Read the student's writing</div>
+    <div class="language-sample" style="background:#fffdf4;">
+      <div style="font-family:'Comic Sans MS','Trebuchet MS',sans-serif;font-size:1.35rem;line-height:1.65;padding:14px;border:2px dashed #9b8f72;background:white;">
+        He hide it because he scared. Then he tell the teacher la verdad.<br>
+        The teacher help him look and he say sorry.<br>
+        He learn is better tell truth because hiding make more problem.
+      </div>
+    </div>
+
+    <div class="step-label">STEP 2 — What does the writing show?</div>
+    <p>Select every statement supported by the response.</p>
+    <div id="languageEObs">
+      <div class="observation-card" onclick="toggleLanguage002E(this,'sequence')">Mateo organizes events in a logical sequence.</div>
+      <div class="observation-card" onclick="toggleLanguage002E(this,'cause')">Mateo explains a causal relationship between fear, hiding the problem, and later consequences.</div>
+      <div class="observation-card" onclick="toggleLanguage002E(this,'theme')">Mateo communicates the lesson that telling the truth is better than hiding a problem.</div>
+      <div class="observation-card" onclick="toggleLanguage002E(this,'spanishbad')">Using “la verdad” makes the response invalid as evidence of comprehension.</div>
+      <div class="observation-card" onclick="toggleLanguage002E(this,'grammarweak')">Because verb forms are inconsistent, Mateo's comprehension is probably weak.</div>
+    </div>
+
+    <button class="primary" onclick="analyzeLanguage002E()">Analyze Written Evidence</button>
+    <button onclick="showLanguageSamples()">Back to Language Sample Archive</button>
+    <div id="language002EFeedback" class="feedback">No evidence analyzed yet.</div>
+  `;
+}
+
+function toggleLanguage002E(card,key){
+  if(language002ESelected.has(key)){
+    language002ESelected.delete(key);
+    card.classList.remove("selected");
+  }else{
+    language002ESelected.add(key);
+    card.classList.add("selected");
+  }
+}
+
+function analyzeLanguage002E(){
+  const supported=["sequence","cause","theme"];
+  const unsupported=["spanishbad","grammarweak"];
+  const chosen=Array.from(language002ESelected);
+  const bad=chosen.some(k=>unsupported.includes(k));
+  const count=chosen.filter(k=>supported.includes(k)).length;
+
+  let headline="Keep meaning and language form analytically separate.";
+  let cls="warning";
+  if(!bad && count===supported.length){
+    headline="Strong reading of the written evidence.";
+    cls="correct";
+    beep("complete");
+  }else if(bad){
+    headline="A language feature has been mistaken for a comprehension judgment.";
+    cls="incorrect";
+    beep("error");
+  }else{
+    beep("file");
+  }
+
+  document.getElementById("language002EFeedback").innerHTML=`
+    <div class="${cls}" style="padding:10px;border:1px solid #8a999f;"><strong>${headline}</strong></div>
+    <div class="evidence">
+      <strong>Comprehension evidence:</strong><br>
+      Mateo sequences the solution, explains motivation and consequence, and states a defensible lesson from the story.
+    </div>
+    <div class="warning">
+      <strong>Written-language evidence:</strong><br>
+      English verb morphology and sentence structure are still developing. The Spanish phrase “la verdad” contributes meaning; it does not cancel the evidence already present.
+    </div>
+    <button class="primary" onclick="showLanguage002ERevision()">Continue: Supported Revision</button>
+  `;
+}
+
+function showLanguage002ERevision(){
+  document.getElementById("screen").innerHTML=`
+    <h2>Sample 002-E: Supported Revision</h2>
+    <div class="labbox">
+      <strong>Teacher move:</strong> Mateo rereads his response with the teacher. The teacher underlines his ideas and asks him to revise one sentence for clearer academic English without changing the meaning.
+    </div>
+
+    <div class="language-sample">
+      <strong>Original:</strong> He learn is better tell truth because hiding make more problem.<br><br>
+      <strong>Teacher prompt:</strong> “Your idea is clear. How could we say that in a complete sentence?”<br><br>
+      <strong>Mateo's revision:</strong> He learns that it is better to tell the truth because hiding the problem makes it worse.
+    </div>
+
+    <h3>What makes this revision useful?</h3>
+    <div class="choice-big" onclick="language002ERevisionChoice('bridge')">It builds academic English from Mateo's original meaning instead of replacing his thinking with the teacher's answer.</div>
+    <div class="choice-big" onclick="language002ERevisionChoice('erase')">It proves the original response should not have counted as comprehension evidence.</div>
+    <div class="choice-big" onclick="language002ERevisionChoice('copy')">Its main value is that the final sentence now looks like standard English, regardless of whether Mateo understands it.</div>
+
+    <div id="language002ERevisionBox" class="feedback">Choose the best interpretation.</div>
+    <button onclick="renderLanguageSampleE()">Back to Original Writing</button>
+  `;
+}
+
+function language002ERevisionChoice(choice){
+  const responses={
+    bridge:"Exactly. The revision connects language development to an idea Mateo already expressed, so the teacher can support English form without discarding evidence of comprehension.",
+    erase:"The revision adds evidence about Mateo's ability to produce a more conventional form with support; it does not invalidate the comprehension visible in the original response.",
+    copy:"A polished sentence is only meaningful evidence if the student understands and can use the language. The goal is development, not cosmetic correction."
+  };
+  const good=choice==="bridge";
+  const box=document.getElementById("language002ERevisionBox");
+  box.className=`feedback ${good ? 'correct' : 'incorrect'}`;
+  box.innerHTML=`${responses[choice]}<br><br><button onclick="showLanguage002EInterpretation()">Continue to Interpretation Record</button>`;
+  beep(good ? "complete" : "error");
+}
+
+function showLanguage002EInterpretation(){
+  document.getElementById("screen").innerHTML=`
+    <h2>Sample 002-E: Interpretation Record</h2>
+    <div class="notebook">
+      <strong>What the original writing demonstrates</strong><br><br>
+      • Logical sequence of events.<br>
+      • Motivation and consequence.<br>
+      • A defensible theme or lesson.<br>
+      • Strategic use of both Spanish and English to sustain meaning.
+    </div>
+    <div class="evidence">
+      <strong>Language-development opportunity:</strong><br>
+      Verb tense/agreement, complete clauses, and academic sentence expansion can be taught using Mateo's own ideas as the starting point.
+    </div>
+    <div class="labbox">
+      <strong>Module 002 principle:</strong> Revision is strongest when it develops language around meaning the student already owns.
+    </div>
+    <button class="primary" onclick="renderLanguageSampleE()">Review Sample Again</button>
+    <button onclick="showLanguageSamples()">Back to Language Sample Archive</button>
+  `;
+}
+
+/* =========================================================
+   SAMPLE 002-F — MULTIMODAL LANGUAGE II
+   ========================================================= */
+let language002FSelected = new Set();
+
+function openLanguageSampleF(){
+  loadingThen(()=>renderLanguageSampleF(), "Opening second multimodal language record...");
+}
+
+function renderLanguageSampleF(){
+  language002FSelected = new Set();
+  setStatus("Sample 002-F opened: Multimodal Language II.", "file");
+  document.getElementById("screen").innerHTML=`
+    <h2>Sample 002-F: Multimodal Language II</h2>
+    <span class="badge">Theoretical Case</span>
+    <span class="badge">Grade 1</span>
+    <span class="badge">Portuguese + English</span>
+
+    <div class="labbox">
+      <strong>Context:</strong> Thiago is a first-grade multilingual learner. In math, students solve: <em>“There are 8 birds. 3 fly away. How many are left? Show how you know.”</em> Students may use counters, drawings, numbers, gestures, and speech.
+    </div>
+
+    <div class="step-label">STEP 1 — Examine the complete response</div>
+    <div class="language-sample" style="background:#fff;">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;align-items:center;">
+        <div style="border:2px dashed #7a8c96;padding:14px;background:#fffdf7;text-align:center;">
+          <div class="smallnote">Theoretical student work</div>
+          <div style="font-size:2rem;letter-spacing:6px;margin:12px 0;">● ● ● ● ● ● ● ●</div>
+          <div style="font-size:1.3rem;margin:8px 0;">crosses out 3 counters</div>
+          <div style="font-size:2rem;margin:10px 0;">8 − 3 = 5</div>
+          <div style="font-size:1.1rem;">writes: <strong>5 left</strong></div>
+        </div>
+        <div>
+          <strong>Teacher observation:</strong><br><br>
+          • Thiago physically moves 3 counters away.<br>
+          • He points to the remaining 5 and says, “cinco... five.”<br>
+          • He gestures backward with his hand while saying, “three go.”<br>
+          • When asked why he used subtraction, he points to the moved counters and says, “because go away.”
+        </div>
+      </div>
+    </div>
+
+    <div class="step-label">STEP 2 — What does the combined response demonstrate?</div>
+    <p>Select every statement supported by the evidence.</p>
+    <div id="languageFObs">
+      <div class="observation-card" onclick="toggleLanguage002F(this,'operation')">Thiago represents the “fly away” action with subtraction.</div>
+      <div class="observation-card" onclick="toggleLanguage002F(this,'quantity')">Thiago identifies 5 as the remaining quantity.</div>
+      <div class="observation-card" onclick="toggleLanguage002F(this,'justify')">Thiago provides a reason for choosing subtraction through gesture and oral language.</div>
+      <div class="observation-card" onclick="toggleLanguage002F(this,'englishmastery')">Thiago has demonstrated complete English mathematical vocabulary.</div>
+      <div class="observation-card" onclick="toggleLanguage002F(this,'portugueseinvalid')">Using “cinco” makes the answer less mathematically valid.</div>
+    </div>
+
+    <button class="primary" onclick="analyzeLanguage002F()">Analyze Multimodal Math Evidence</button>
+    <button onclick="showLanguageSamples()">Back to Language Sample Archive</button>
+    <div id="language002FFeedback" class="feedback">No evidence analyzed yet.</div>
+  `;
+}
+
+function toggleLanguage002F(card,key){
+  if(language002FSelected.has(key)){
+    language002FSelected.delete(key);
+    card.classList.remove("selected");
+  }else{
+    language002FSelected.add(key);
+    card.classList.add("selected");
+  }
+}
+
+function analyzeLanguage002F(){
+  const supported=["operation","quantity","justify"];
+  const unsupported=["englishmastery","portugueseinvalid"];
+  const chosen=Array.from(language002FSelected);
+  const bad=chosen.some(k=>unsupported.includes(k));
+  const count=chosen.filter(k=>supported.includes(k)).length;
+
+  let headline="Interpret the mathematical meaning across modes.";
+  let cls="warning";
+  if(!bad && count===supported.length){
+    headline="Strong multimodal interpretation.";
+    cls="correct";
+    beep("complete");
+  }else if(bad){
+    headline="Language choice has been mistaken for mathematical validity.";
+    cls="incorrect";
+    beep("error");
+  }else{
+    beep("file");
+  }
+
+  document.getElementById("language002FFeedback").innerHTML=`
+    <div class="${cls}" style="padding:10px;border:1px solid #8a999f;"><strong>${headline}</strong></div>
+    <div class="evidence">
+      <strong>Mathematical evidence:</strong><br>
+      Thiago coordinates manipulatives, a number sentence, gesture, Portuguese, and English to represent subtraction and justify the operation.
+    </div>
+    <div class="warning">
+      <strong>Language evidence:</strong><br>
+      His English explanation is concise and emerging. The bilingual number naming does not weaken the mathematical relationship he demonstrates.
+    </div>
+    <button class="primary" onclick="showLanguage002FConstraint()">Continue: Change the Response Rules</button>
+  `;
+}
+
+function showLanguage002FConstraint(){
+  document.getElementById("screen").innerHTML=`
+    <h2>Sample 002-F: Change the Response Rules</h2>
+    <div class="labbox">
+      <strong>New condition:</strong> Imagine the teacher removes the counters and drawing, then requires Thiago to explain the solution using complete English sentences before writing the equation.
+    </div>
+
+    <h3>What is the main assessment risk?</h3>
+    <div class="choice-big" onclick="language002FConstraintChoice('construct')">The task may begin measuring English production more heavily than the intended mathematical reasoning.</div>
+    <div class="choice-big" onclick="language002FConstraintChoice('better')">The assessment becomes automatically more rigorous because fewer supports are allowed.</div>
+    <div class="choice-big" onclick="language002FConstraintChoice('none')">There is no risk because students should always explain mathematics in one language only.</div>
+    <div class="choice-big" onclick="language002FConstraintChoice('easiermath')">The best solution is to give Thiago easier subtraction problems.</div>
+
+    <div id="language002FConstraintBox" class="feedback">Choose the best-supported interpretation.</div>
+    <button onclick="renderLanguageSampleF()">Back to Full Response</button>
+  `;
+}
+
+function language002FConstraintChoice(choice){
+  const responses={
+    construct:"Exactly. If the learning target is mathematical reasoning, a response rule that greatly increases English demands can introduce construct-irrelevant difficulty.",
+    better:"Fewer supports do not automatically make an assessment more rigorous. Rigor comes from the cognitive demand of the target, not from unnecessary access barriers.",
+    none:"Mathematical reasoning can be communicated through multiple legitimate modes. Language development can be assessed separately when that is the target.",
+    easiermath:"Thiago's demonstrated reasoning does not justify reducing the mathematical demand. Better access is preferable to easier content."
+  };
+  const good=choice==="construct";
+  const box=document.getElementById("language002FConstraintBox");
+  box.className=`feedback ${good ? 'correct' : 'incorrect'}`;
+  box.innerHTML=`${responses[choice]}<br><br><button onclick="showLanguage002FInterpretation()">Continue to Interpretation Record</button>`;
+  beep(good ? "complete" : "error");
+}
+
+function showLanguage002FInterpretation(){
+  document.getElementById("screen").innerHTML=`
+    <h2>Sample 002-F: Interpretation Record</h2>
+    <div class="notebook">
+      <strong>Meaning communicated across modes</strong><br><br>
+      • Models a take-away situation.<br>
+      • Represents the action symbolically with 8 − 3 = 5.<br>
+      • Identifies the remaining quantity.<br>
+      • Justifies the operation through gesture and emerging oral language.
+    </div>
+    <div class="evidence">
+      <strong>Assessment implication:</strong><br>
+      When mathematical understanding is the target, manipulatives, drawings, symbols, gesture, and bilingual language can all contribute valid evidence of reasoning.
+    </div>
+    <div class="labbox">
+      <strong>Module 002 principle:</strong> A response mode should help reveal the target—not quietly replace it with a different target.
+    </div>
+    <button class="primary" onclick="renderLanguageSampleF()">Review Sample Again</button>
+    <button onclick="showLanguageSamples()">Back to Language Sample Archive</button>
+  `;
+}
+
+
+
+
+/* =========================================================
+   MODULE 005 — SELF-ASSESSMENT TOOLS
+   ========================================================= */
+
+const selfCases = [
+  {
+    id:"lucia-goal",
+    code:"005-A",
+    title:"What Am I Checking?",
+    student:"Lucía",
+    focus:"Learning Target Visibility",
+    task:"Explain what a plant needs and why.",
+    target:"I can tell one thing a plant needs and explain why it helps.",
+    evidence:"Lucía says, “The plant need agua and sun because water help it go up.”",
+    choices:[
+      {label:"A",text:"I used only English.",verdict:"risk"},
+      {label:"B",text:"I named what the plant needs and told why water helps.",verdict:"best"},
+      {label:"C",text:"My answer was long.",verdict:"partial"}
+    ],
+    best:"B",
+    explanation:"A useful self-check directs the learner back to the learning target. English-only production and response length are not the science target."
+  },
+  {
+    id:"thiago-evidence",
+    code:"005-B",
+    title:"Can I See My Own Evidence?",
+    student:"Thiago",
+    focus:"Evidence Recognition",
+    task:"Solve and explain 8 − 3.",
+    target:"I can show subtraction and explain why my answer makes sense.",
+    evidence:"Thiago uses 8 counters, moves 3 away, writes 8 − 3 = 5, and says “three go... five left.”",
+    choices:[
+      {label:"A",text:"I showed 8, took away 3, and I can see 5 left.",verdict:"best"},
+      {label:"B",text:"I need a complete English sentence before I can say I understand.",verdict:"risk"},
+      {label:"C",text:"I got the same answer as someone else.",verdict:"partial"}
+    ],
+    best:"A",
+    explanation:"Self-assessment is strongest when the learner can point to evidence of the target in their own work. Thiago's model, equation, and explanation all provide mathematical evidence."
+  },
+  {
+    id:"samira-modes",
+    code:"005-C",
+    title:"Does My Communication Count?",
+    student:"Samira",
+    focus:"Multimodal Self-Assessment",
+    task:"Show how water helps a plant.",
+    target:"I can show what changes when a plant gets water.",
+    evidence:"Samira draws roots, adds the Arabic label ماء, gestures upward, and says “water... plant up.”",
+    choices:[
+      {label:"A",text:"My drawing, label, gesture, and words work together to show the change.",verdict:"best"},
+      {label:"B",text:"It does not count until I say everything in English.",verdict:"risk"},
+      {label:"C",text:"My picture is pretty.",verdict:"partial"}
+    ],
+    best:"A",
+    explanation:"Self-assessment should help students recognize valid evidence in the modes allowed by the task, not teach them to discount their own meaning-making."
+  },
+  {
+    id:"minh-revision",
+    code:"005-D",
+    title:"What Should I Revise Next?",
+    student:"Minh",
+    focus:"Actionable Next Step",
+    task:"Write how water helps a plant.",
+    target:"I can explain how one plant need helps the plant grow.",
+    evidence:"Minh writes: “plant ned wotr. sun. it gro.”",
+    choices:[
+      {label:"A",text:"Fix every spelling error first.",verdict:"risk"},
+      {label:"B",text:"Add one sentence that tells how water helps the plant.",verdict:"best"},
+      {label:"C",text:"Start over and make it longer.",verdict:"partial"}
+    ],
+    best:"B",
+    explanation:"A productive self-assessment identifies one manageable next move tied to meaning and the learning target. Conventions can be addressed without replacing the content goal."
+  },
+  {
+    id:"jihoon-confidence",
+    code:"005-E",
+    title:"Confidence Is Not the Same as Mastery",
+    student:"Ji-hoon",
+    focus:"Confidence vs. Evidence",
+    task:"Identify what plants need.",
+    target:"I can identify water, sunlight, and air as plant needs.",
+    evidence:"Ji-hoon correctly identifies the three needs when Korean print access and visuals are available, but says he is “not good at science” after an earlier English-only test.",
+    choices:[
+      {label:"A",text:"I felt unsure, so I must not understand the science.",verdict:"risk"},
+      {label:"B",text:"I can point to three correct plant needs, even though the English-only test felt hard.",verdict:"best"},
+      {label:"C",text:"I should wait for the teacher to tell me whether I understand.",verdict:"partial"}
+    ],
+    best:"B",
+    explanation:"Self-assessment should teach students to use evidence rather than feelings alone. Confidence matters, but it is not a substitute for evidence of learning."
+  },
+  {
+    id:"sophia-access",
+    code:"005-F",
+    title:"Is the Problem My Learning—or My Access?",
+    student:"Sophia",
+    focus:"Self-Advocacy + Access",
+    task:"Read and respond to a visually dense science page.",
+    target:"I can identify the evidence that shows what a plant needs.",
+    evidence:"Sophia knows the answers orally but repeatedly loses her place on crowded print. She performs better with increased spacing and reduced visual clutter.",
+    choices:[
+      {label:"A",text:"I know the science, but I need the page spaced differently so I can show it.",verdict:"best"},
+      {label:"B",text:"If the page is hard to look at, that means I do not understand.",verdict:"risk"},
+      {label:"C",text:"I should skip the task.",verdict:"partial"}
+    ],
+    best:"A",
+    explanation:"Self-assessment can include self-advocacy. Students can learn to distinguish between the learning target and an access condition without diagnosing themselves."
+  }
+];
+
+function showSelfAssessment(){
+  document.getElementById("screen").classList.remove("flash-access");
+  setStatus("Module 005: Self-Assessment Tools opened.", "unlock");
+  document.getElementById("screen").innerHTML=`
+    <h2>Module 005: Self-Assessment Tools</h2>
+
+    <div class="labbox">
+      <strong>Investigation focus:</strong> How can self-assessment help learners recognize evidence of their own learning without turning reflection into another language, reading, or compliance test?
+    </div>
+
+    <p>Self-assessment is not asking students to guess a grade. It teaches learners to compare their work with a visible target, notice evidence, identify what is not yet clear, and choose a realistic next step.</p>
+
+    <div class="evidence">
+      <strong>Guiding Question:</strong><br>
+      Can the learner use the self-assessment tool to make an accurate, evidence-based decision about their learning?
+    </div>
+
+    <h3>The GIDA Self-Check</h3>
+    <div class="self-grid">
+      <div class="self-tool"><strong>1. Know the Target</strong><br><span class="smallnote">What am I trying to learn or show?</span></div>
+      <div class="self-tool"><strong>2. Find the Evidence</strong><br><span class="smallnote">Where can I point, show, say, select, draw, or write evidence?</span></div>
+      <div class="self-tool"><strong>3. Judge the Match</strong><br><span class="smallnote">Does my evidence actually match the target?</span></div>
+      <div class="self-tool"><strong>4. Choose the Next Step</strong><br><span class="smallnote">What is one thing I can try next?</span></div>
+    </div>
+
+    <div class="warning">
+      <strong>Design rule:</strong> A self-assessment tool should never demand more language, reading, writing, memory, or motor output than the learning target requires unless that skill is itself being assessed.
+    </div>
+
+    <h3>Investigation Files</h3>
+    <div class="row">
+      ${selfCases.map(c=>`
+        <div class="folder-card module-card" onclick="openSelfCase('${c.id}')">
+          <strong>${c.code}</strong><br>
+          <span class="badge">${c.focus}</span>
+          <p>${c.title}</p>
+          <p class="smallnote">${c.student}</p>
+        </div>
+      `).join("")}
+    </div>
+
+    <button class="primary" onclick="showSelfToolbox()">Open Student Self-Assessment Toolbox</button>
+    <button onclick="showSelfCalibration()">Open Final Self-Assessment Lab</button>
+    <button onclick="showModules()">Back to Module Directory</button>
+  `;
+}
+
+function openSelfCase(id){
+  const c=selfCases.find(x=>x.id===id);
+  if(!c) return showSelfAssessment();
+  loadingThen(()=>renderSelfCase(c), "Opening self-assessment file...");
+}
+
+function renderSelfCase(c){
+  setStatus(`${c.code}: ${c.title}`, "file");
+  document.getElementById("screen").innerHTML=`
+    <h2>${c.code}: ${c.title}</h2>
+    <div class="profile-strip">
+      <span class="badge">${c.student}</span>
+      <span class="badge">${c.focus}</span>
+    </div>
+
+    <div class="evidence"><strong>Learning target:</strong><br>${c.target}</div>
+    <div class="notebook"><strong>Task:</strong><br>${c.task}</div>
+    <div class="artifact-card"><strong>Student evidence:</strong><br>${c.evidence}</div>
+
+    <div class="step-label">WHICH SELF-ASSESSMENT STATEMENT IS MOST USEFUL?</div>
+    ${c.choices.map(m=>`
+      <button onclick="scoreSelfChoice('${c.id}','${m.label}')">
+        <strong>${m.label}.</strong> ${m.text}
+      </button>
+    `).join("")}
+
+    <div id="selfFeedbackBox" class="feedback">
+      Choose the statement that most accurately connects the learner's evidence to the learning target.
+    </div>
+
+    <button onclick="showSelfAssessment()">Back to Self-Assessment Archive</button>
+  `;
+}
+
+function scoreSelfChoice(id,label){
+  const c=selfCases.find(x=>x.id===id);
+  if(!c) return;
+  const box=document.getElementById("selfFeedbackBox");
+  if(label===c.best){
+    box.className="feedback correct";
+    box.innerHTML=`<strong>Strong choice.</strong> ${c.explanation}<br><br>
+      <button class="primary" onclick="showSelfAssessment()">Return to the investigation files</button>`;
+    beep("complete");
+  }else{
+    const selected=c.choices.find(x=>x.label===label);
+    box.className="feedback incorrect";
+    box.innerHTML=`<strong>Recheck the self-assessment purpose.</strong> ${selected && selected.verdict==="risk" ? "This statement risks teaching the learner to judge themselves by a barrier or a feature that is not the target." : "This statement may be useful in another context, but it does not yet give the learner a strong evidence-based self-check."}`;
+    beep("error");
+  }
+}
+
+function showSelfToolbox(){
+  setStatus("Student self-assessment toolbox opened.", "file");
+  document.getElementById("screen").innerHTML=`
+    <h2>Student Self-Assessment Toolbox</h2>
+    <p>The same four-part self-check can be expressed in different ways depending on learner age, communication mode, and task.</p>
+
+    <div class="reflection-card">
+      <strong>Tool 1: Show Me the Evidence</strong><br>
+      “Point to the part that shows the learning goal.”<br>
+      <span class="smallnote">Students may point to a drawing, equation, AAC selection, word, sentence, model, gesture, or other task-relevant evidence.</span>
+    </div>
+
+    <div class="reflection-card">
+      <strong>Tool 2: Three-Way Evidence Scale</strong>
+      <div class="self-scale">
+        <button><strong>I can show it</strong><br><span class="smallnote">I have evidence that matches the goal.</span></button>
+        <button><strong>I can show part</strong><br><span class="smallnote">Some evidence matches, but something is missing.</span></button>
+        <button><strong>I need another try</strong><br><span class="smallnote">I need support, another example, or a different access condition.</span></button>
+      </div>
+      <span class="smallnote">This scale is more informative than happy/sad faces because the choices describe evidence rather than emotion.</span>
+    </div>
+
+    <div class="reflection-card">
+      <strong>Tool 3: One Next Step</strong><br>
+      “What is one thing you could add, change, show, or explain next?”<br>
+      <span class="smallnote">Keep the next step small enough that the learner can act on it immediately.</span>
+    </div>
+
+    <div class="reflection-card">
+      <strong>Tool 4: Access Check</strong><br>
+      “Do I understand the learning goal? Can I access the task? Can I show what I know in an allowed way?”<br>
+      <span class="smallnote">This helps students distinguish a learning need from an access need without asking them to diagnose themselves.</span>
+    </div>
+
+    <div class="goal-card">
+      <strong>Kindergarten-friendly routine:</strong><br>
+      <strong>Goal → Show → Next</strong><br>
+      “What are we learning?” → “Show me where you did it.” → “What will you try next?”
+    </div>
+
+    <button class="primary" onclick="showSelfCalibration()">Try the Self-Assessment Calibration Lab</button>
+    <button onclick="showSelfAssessment()">Back to Module 005</button>
+  `;
+}
+
+const selfCalibrationItems=[
+  {
+    prompt:"A student circles a smiley face because the activity was fun.",
+    verdict:"partial",
+    reason:"Enjoyment is useful affective information, but it does not tell whether the student has evidence of the learning target."
+  },
+  {
+    prompt:"A student points to an equation and says, “This shows I took away 3 and got 5.”",
+    verdict:"strong",
+    reason:"The learner identifies concrete evidence and explains how it matches the mathematical target."
+  },
+  {
+    prompt:"A multilingual learner marks “not yet” because they used one home-language word in an otherwise accurate science explanation.",
+    verdict:"risk",
+    reason:"The self-check is teaching the student to treat home-language use as failure even though language purity is not the science target."
+  },
+  {
+    prompt:"A student says, “I can show part. I named water, but I still need to tell why it helps the plant.”",
+    verdict:"strong",
+    reason:"The learner accurately identifies existing evidence and a specific next step."
+  },
+  {
+    prompt:"A student says, “I am bad at reading, so I probably did the science wrong.”",
+    verdict:"risk",
+    reason:"The learner is conflating an access or literacy difficulty with science understanding instead of checking evidence against the target."
+  }
+];
+let selfCalibrationIndex=0;
+let selfCalibrationScore=0;
+
+function showSelfCalibration(){
+  selfCalibrationIndex=0;
+  selfCalibrationScore=0;
+  renderSelfCalibrationItem();
+}
+
+function renderSelfCalibrationItem(){
+  if(selfCalibrationIndex>=selfCalibrationItems.length){
+    return showSelfCalibrationResult();
+  }
+  const item=selfCalibrationItems[selfCalibrationIndex];
+  setStatus(`Self-assessment calibration ${selfCalibrationIndex+1} of ${selfCalibrationItems.length}`, "file");
+  document.getElementById("screen").innerHTML=`
+    <h2>Module 005 Final Self-Assessment Lab</h2>
+    <div class="step-label">SELF-CHECK ${selfCalibrationIndex+1} OF ${selfCalibrationItems.length}</div>
+    <div class="student-think">${item.prompt}</div>
+    <p>How would you classify this self-assessment?</p>
+    <button class="primary" onclick="answerSelfCalibration('strong')">Strong evidence-based self-assessment</button>
+    <button onclick="answerSelfCalibration('partial')">Useful information, but incomplete</button>
+    <button onclick="answerSelfCalibration('risk')">Validity or access risk</button>
+    <div id="selfCalibrationBox" class="feedback">Use the four-part GIDA Self-Check.</div>
+  `;
+}
+
+function answerSelfCalibration(choice){
+  const item=selfCalibrationItems[selfCalibrationIndex];
+  const box=document.getElementById("selfCalibrationBox");
+  if(choice===item.verdict){
+    selfCalibrationScore++;
+    box.className="feedback correct";
+    box.innerHTML=`<strong>Yes.</strong> ${item.reason}<br><br><button class="primary" onclick="nextSelfCalibration()">Next self-check</button>`;
+    beep("complete");
+  }else{
+    box.className="feedback incorrect";
+    box.innerHTML=`Reconsider whether the student is using visible evidence of the learning target, or judging themselves by confidence, compliance, language form, or an access barrier instead.`;
+    beep("error");
+  }
+}
+
+function nextSelfCalibration(){
+  selfCalibrationIndex++;
+  renderSelfCalibrationItem();
+}
+
+function showSelfCalibrationResult(){
+  const pct=Math.round((selfCalibrationScore/selfCalibrationItems.length)*100);
+  setStatus("Self-assessment calibration complete.", "complete");
+  document.getElementById("screen").innerHTML=`
+    <h2>Self-Assessment Calibration Complete</h2>
+    <div class="scorecard">
+      <strong>${selfCalibrationScore} / ${selfCalibrationItems.length}</strong><br>
+      ${pct}% calibrated to the GIDA Self-Check
+    </div>
+
+    <div class="evidence">
+      <strong>Module principle:</strong><br>
+      Self-assessment becomes meaningful when students can identify the learning target, locate evidence in their own work, judge the match, and choose a manageable next step. It should increase learner agency—not teach students to internalize access barriers as personal failure.
+    </div>
+
+    <div class="notebook">
+      <strong>Transfer question:</strong><br>
+      What would a student in your classroom need to understand before “How did I do?” becomes an evidence-based question rather than a guess about grades, behavior, or teacher approval?
+    </div>
+
+    <button class="primary" onclick="showSelfAssessment()">Review Module 005</button>
+    <button onclick="showModules()">Return to Module Directory</button>
+  `;
+}
+
+/* =========================================================
+   MODULE 004 — PEER ASSESSMENT
+   ========================================================= */
+
+const peerCases = [
+  {
+    id:"content-language",
+    code:"004-A",
+    title:"Feedback or Language Correction?",
+    focus:"Target Alignment",
+    students:["Miguel","Gideon"],
+    task:"Students explain what plants need and why.",
+    target:"Science understanding: identify plant needs and explain a cause/effect relationship.",
+    sample:`Miguel: “Plant need agua because roots get it. No water, leaves go down.”`,
+    comments:[
+      {label:"A",text:"You forgot the -s in needs and you used Spanish. Fix the English.",type:"risk"},
+      {label:"B",text:"You explained that roots get water and that leaves droop without it. Can you add what sunlight does?",type:"good"},
+      {label:"C",text:"Good job!",type:"caution"}
+    ],
+    best:"B",
+    explanation:"Comment B stays aligned to the science target, names evidence already present, and asks for a useful next step. Comment A quietly changes the target from science reasoning to English accuracy; C is positive but too vague to guide revision."
+  },
+  {
+    id:"visual-access",
+    code:"004-B",
+    title:"When the Peer Cannot Access the Product",
+    focus:"Access Before Judgment",
+    students:["Sophia","Lucía"],
+    task:"Partners review a plant diagram and explanation.",
+    target:"Communicate how water moves through a plant.",
+    sample:"Sophia's page contains accurate labels but tightly packed text and small arrows. Lucía says she cannot tell where to start reading.",
+    comments:[
+      {label:"A",text:"Your work is confusing.",type:"risk"},
+      {label:"B",text:"I think the roots take in water, but I cannot follow the arrows yet. Could you make the arrows larger or show me the order?",type:"good"},
+      {label:"C",text:"I will just score the parts I can see.",type:"caution"}
+    ],
+    best:"B",
+    explanation:"Peer assessment requires access to the evidence. B separates the science idea from the presentation barrier and requests an access change rather than treating difficulty accessing the page as weak content knowledge."
+  },
+  {
+    id:"multimodal",
+    code:"004-C",
+    title:"Who Gets to Give Feedback?",
+    focus:"Multimodal Participation",
+    students:["Aiden","Samira"],
+    task:"Partners compare explanations of how plants recover after watering.",
+    target:"Explain a change over time using evidence.",
+    sample:"Aiden uses AAC symbols and a sequence strip. Samira uses drawing, gesture, Arabic labels, and emerging English.",
+    comments:[
+      {label:"A",text:"Peer feedback only counts if both students say a complete sentence aloud.",type:"risk"},
+      {label:"B",text:"Each student may point, select, draw, sign, use AAC, speak, or combine modes to notice evidence and suggest a next step.",type:"good"},
+      {label:"C",text:"The teacher should give all feedback because the students use different communication modes.",type:"caution"}
+    ],
+    best:"B",
+    explanation:"A response mode should not become an unnecessary gate to participation. Peer assessment is valid when students can access the criteria and communicate feedback through meaningful modes."
+  },
+  {
+    id:"specificity",
+    code:"004-D",
+    title:"Useful Feedback Has a Job",
+    focus:"Specificity + Actionability",
+    students:["Minh","Mateo"],
+    task:"Students review short written explanations.",
+    target:"Explain a cause using evidence from the task.",
+    sample:`Minh: “plant ned wotr. sun. it gro.” Mateo is asked to give one peer comment.`,
+    comments:[
+      {label:"A",text:"Nice work.",type:"caution"},
+      {label:"B",text:"You named water and sun. Add one sentence that tells how one of them helps the plant grow.",type:"good"},
+      {label:"C",text:"There are lots of spelling mistakes.",type:"risk"}
+    ],
+    best:"B",
+    explanation:"B identifies successful evidence and gives a manageable next action tied to the learning target. A cannot guide revision; C foregrounds conventions even though the assessed target is causal explanation."
+  },
+  {
+    id:"math",
+    code:"004-E",
+    title:"Peer Assessment in Mathematics",
+    focus:"Reasoning Over Fluency",
+    students:["Thiago","Ayaan"],
+    task:"Students compare solutions to a subtraction story problem.",
+    target:"Represent subtraction and explain why the answer makes sense.",
+    sample:"Thiago uses counters, 8 − 3 = 5, and says “three go... five left.”",
+    comments:[
+      {label:"A",text:"Your answer is correct because 8 minus 3 equals 5. Show me which three left so I can follow your model.",type:"good"},
+      {label:"B",text:"Say the explanation again in a full English sentence before I check your math.",type:"risk"},
+      {label:"C",text:"I got 5 too.",type:"caution"}
+    ],
+    best:"A",
+    explanation:"A checks the mathematical representation and invites visible reasoning. B makes English fluency a gate to mathematical evidence. C compares answers but does not actually assess the reasoning."
+  },
+  {
+    id:"quiet-voice",
+    code:"004-F",
+    title:"Participation Is More Than Speaking First",
+    focus:"Equitable Peer Roles",
+    students:["Ji-hoon","Gideon"],
+    task:"Partners review a science explanation using a picture-supported checklist.",
+    target:"Identify evidence that supports a claim.",
+    sample:"Ji-hoon understands the diagram but needs extra processing time before responding in English.",
+    comments:[
+      {label:"A",text:"The faster partner explains first and decides the score.",type:"risk"},
+      {label:"B",text:"Both partners get think time, point to evidence first, and then each records one notice or question in an accessible mode.",type:"good"},
+      {label:"C",text:"Ji-hoon can listen while Gideon completes the peer assessment.",type:"caution"}
+    ],
+    best:"B",
+    explanation:"Peer assessment should distribute cognitive authority rather than reward speed or English dominance. Structured think time and evidence-first roles make participation more equitable."
+  }
+];
+
+function showPeerAssessment(){
+  document.getElementById("screen").classList.remove("flash-access");
+  setStatus("Module 004: Peer Assessment opened.", "unlock");
+  document.getElementById("screen").innerHTML=`
+    <h2>Module 004: Peer Assessment</h2>
+
+    <div class="labbox">
+      <strong>Investigation focus:</strong> When does peer assessment make learning more visible—and when can it reproduce the same access barriers found in teacher-created assessment?
+    </div>
+
+    <p>Peer assessment is not simply asking students to “check each other's work.” Students need access to the <strong>learning target</strong>, a usable feedback routine, and a legitimate way to communicate what they notice.</p>
+
+    <div class="evidence">
+      <strong>Guiding Question:</strong><br>
+      Does the peer feedback help the learner understand what is already working, what evidence matters, and what to try next?
+    </div>
+
+    <h3>The GIDA Peer Evidence Check</h3>
+    <div class="criteria-grid">
+      <div class="criteria-box"><strong>1. Aligned</strong><br><span class="smallnote">Feedback addresses the actual learning target.</span></div>
+      <div class="criteria-box"><strong>2. Evidence-Based</strong><br><span class="smallnote">The peer points to something visible, audible, or otherwise observable.</span></div>
+      <div class="criteria-box"><strong>3. Actionable</strong><br><span class="smallnote">The learner can tell what to do next.</span></div>
+      <div class="criteria-box"><strong>4. Accessible</strong><br><span class="smallnote">Neither giving nor receiving feedback depends on an unnecessary language or response-mode barrier.</span></div>
+    </div>
+
+    <div class="warning">
+      <strong>Important:</strong> A peer should not be asked to diagnose a classmate, determine English proficiency, or infer ability. The peer's job is to use shared criteria to notice evidence and support revision.
+    </div>
+
+    <h3>Investigation Files</h3>
+    <div class="row">
+      ${peerCases.map(c=>`
+        <div class="folder-card module-card" onclick="openPeerCase('${c.id}')">
+          <strong>${c.code}</strong><br>
+          <span class="badge">${c.focus}</span>
+          <p>${c.title}</p>
+          <p class="smallnote">${c.students.join(" + ")}</p>
+        </div>
+      `).join("")}
+    </div>
+
+    <button class="primary" onclick="showPeerProtocol()">Open Student-Friendly Feedback Protocol</button>
+    <button onclick="showPeerCalibration()">Open Final Calibration Lab</button>
+    <button onclick="showModules()">Back to Module Directory</button>
+  `;
+}
+
+function openPeerCase(id){
+  const c=peerCases.find(x=>x.id===id);
+  if(!c) return showPeerAssessment();
+  loadingThen(()=>renderPeerCase(c), "Loading peer assessment file...");
+}
+
+function renderPeerCase(c){
+  setStatus(`${c.code}: ${c.title}`, "file");
+  document.getElementById("screen").innerHTML=`
+    <h2>${c.code}: ${c.title}</h2>
+    <div class="peer-pair">
+      <div class="peer-student">
+        <strong>${c.students[0]}</strong><br>
+        <span class="badge">Learner / Peer</span>
+      </div>
+      <div class="peer-arrow">⇄</div>
+      <div class="peer-student">
+        <strong>${c.students[1]}</strong><br>
+        <span class="badge">Learner / Peer</span>
+      </div>
+    </div>
+
+    <div class="evidence"><strong>Learning target:</strong><br>${c.target}</div>
+    <div class="notebook"><strong>Peer-assessment context:</strong><br>${c.task}</div>
+    <div class="artifact-card"><strong>Evidence under review:</strong><br>${c.sample}</div>
+
+    <div class="step-label">WHICH PEER RESPONSE BEST SUPPORTS LEARNING?</div>
+    ${c.comments.map(m=>`
+      <button onclick="scorePeerComment('${c.id}','${m.label}')">
+        <strong>${m.label}.</strong> ${m.text}
+      </button>
+    `).join("")}
+
+    <div id="peerFeedbackBox" class="feedback">
+      Choose the response that is most aligned, evidence-based, actionable, and accessible.
+    </div>
+
+    <button onclick="showPeerAssessment()">Back to Peer Assessment Archive</button>
+  `;
+}
+
+function scorePeerComment(id,label){
+  const c=peerCases.find(x=>x.id===id);
+  if(!c) return;
+  const box=document.getElementById("peerFeedbackBox");
+  if(label===c.best){
+    box.className="feedback correct";
+    box.innerHTML=`<strong>Strong choice.</strong> ${c.explanation}<br><br>
+      <button class="primary" onclick="showPeerAssessment()">Return to the investigation files</button>`;
+    beep("complete");
+  }else{
+    const chosen=c.comments.find(x=>x.label===label);
+    box.className="feedback incorrect";
+    box.innerHTML=`<strong>Recheck the learning target.</strong> This response is ${chosen && chosen.type==="risk" ? "likely to introduce an access or validity problem" : "not harmful, but it does not yet give the learner enough usable evidence"}. Ask: <em>What is the student actually supposed to learn here?</em>`;
+    beep("error");
+  }
+}
+
+function showPeerProtocol(){
+  setStatus("Student-friendly peer feedback protocol opened.", "file");
+  document.getElementById("screen").innerHTML=`
+    <h2>Peer Feedback Protocol: Notice → Ask → Next</h2>
+    <p>This routine is intentionally short enough to teach to young learners while still protecting the purpose of peer assessment.</p>
+
+    <div class="protocol-step">
+      <div class="protocol-num">1</div>
+      <div><strong>NOTICE</strong><br>Point to something that matches the learning goal.<br>
+      <span class="smallnote">“I notice you showed…” • “I can see/hear…” • “This part tells me…”</span></div>
+    </div>
+
+    <div class="protocol-step">
+      <div class="protocol-num">2</div>
+      <div><strong>ASK</strong><br>Ask one question that helps you understand the learner's thinking.<br>
+      <span class="smallnote">“Can you show me…?” • “Why did you…?” • “What happens next?”</span></div>
+    </div>
+
+    <div class="protocol-step">
+      <div class="protocol-num">3</div>
+      <div><strong>NEXT</strong><br>Offer one manageable next step connected to the target.<br>
+      <span class="smallnote">“You could add…” • “Show one more…” • “Tell why…”</span></div>
+    </div>
+
+    <div class="evidence">
+      <strong>Access rule:</strong> Students may notice, ask, and suggest by speaking, pointing, drawing, selecting symbols, using AAC, signing, writing, or combining modes when those modes allow them to engage with the shared criteria.
+    </div>
+
+    <div class="warning">
+      <strong>Not the peer's job:</strong> correcting every spelling/grammar error, assigning an English-proficiency label, deciding whether a classmate has a disability, or replacing teacher evaluation.
+    </div>
+
+    <button class="primary" onclick="showPeerCalibration()">Try the Calibration Lab</button>
+    <button onclick="showPeerAssessment()">Back to Module 004</button>
+  `;
+}
+
+const calibrationItems=[
+  {
+    comment:"“You used 8 counters and moved 3 away. I can see 5 are left. Can you circle the 5 that stayed?”",
+    verdict:"strong",
+    reason:"It names evidence, stays with mathematical reasoning, and offers a visible next action."
+  },
+  {
+    comment:"“This is wrong because your English is hard to understand.”",
+    verdict:"risk",
+    reason:"It does not identify evidence or the learning target and may confuse English production with the assessed content."
+  },
+  {
+    comment:"“I like your picture.”",
+    verdict:"partial",
+    reason:"It is friendly, but it does not tell the learner what evidence meets the target or what to do next."
+  },
+  {
+    comment:"“I notice your arrows show water moving to the roots. What happens after the roots get the water?”",
+    verdict:"strong",
+    reason:"It identifies evidence and asks a question that can extend the explanation."
+  }
+];
+let calibrationIndex=0;
+let calibrationScore=0;
+
+function showPeerCalibration(){
+  calibrationIndex=0;
+  calibrationScore=0;
+  renderCalibrationItem();
+}
+
+function renderCalibrationItem(){
+  if(calibrationIndex>=calibrationItems.length){
+    return showCalibrationResult();
+  }
+  const item=calibrationItems[calibrationIndex];
+  setStatus(`Peer calibration ${calibrationIndex+1} of ${calibrationItems.length}`, "file");
+  document.getElementById("screen").innerHTML=`
+    <h2>Module 004 Final Calibration Lab</h2>
+    <div class="step-label">COMMENT ${calibrationIndex+1} OF ${calibrationItems.length}</div>
+    <div class="peer-comment">${item.comment}</div>
+    <p>How would you classify this peer feedback?</p>
+    <button class="primary" onclick="answerCalibration('strong')">Strong evidence-based feedback</button>
+    <button onclick="answerCalibration('partial')">Positive / usable, but incomplete</button>
+    <button onclick="answerCalibration('risk')">Validity or access risk</button>
+    <div id="calibrationBox" class="feedback">Use the four-part Peer Evidence Check.</div>
+  `;
+}
+
+function answerCalibration(choice){
+  const item=calibrationItems[calibrationIndex];
+  const box=document.getElementById("calibrationBox");
+  if(choice===item.verdict){
+    calibrationScore++;
+    box.className="feedback correct";
+    box.innerHTML=`<strong>Yes.</strong> ${item.reason}<br><br><button class="primary" onclick="nextCalibration()">Next comment</button>`;
+    beep("complete");
+  }else{
+    box.className="feedback incorrect";
+    box.innerHTML=`Reconsider whether the comment is aligned, evidence-based, actionable, and accessible.`;
+    beep("error");
+  }
+}
+
+function nextCalibration(){
+  calibrationIndex++;
+  renderCalibrationItem();
+}
+
+function showCalibrationResult(){
+  const pct=Math.round((calibrationScore/calibrationItems.length)*100);
+  setStatus("Peer assessment calibration complete.", "complete");
+  document.getElementById("screen").innerHTML=`
+    <h2>Peer Assessment Calibration Complete</h2>
+    <div class="scorecard">
+      <strong>${calibrationScore} / ${calibrationItems.length}</strong><br>
+      ${pct}% calibrated to the GIDA Peer Evidence Check
+    </div>
+    <div class="evidence">
+      <strong>Module principle:</strong><br>
+      Peer assessment is strongest when students share cognitive authority without being asked to become miniature teachers or language gatekeepers. The peer's role is to notice evidence, ask for clarification, and support a next step toward the learning target.
+    </div>
+    <div class="notebook">
+      <strong>Transfer question:</strong><br>
+      What would you need to teach explicitly before expecting students in your classroom to give useful peer feedback?
+    </div>
+    <button class="primary" onclick="showPeerAssessment()">Review Module 004</button>
+    <button onclick="showModules()">Return to Module Directory</button>
+  `;
+}
+
+/* =========================================================
+   MODULE 003 — STUDENT PORTFOLIOS (DEVELOPMENT BUILD)
+   ========================================================= */
+
+const portfolioStudents = [
+  {
+    id:"miguel", name:"Miguel", grade:"Grade 1", languages:"Spanish + English",
+    proficiency:"LEP", access:"Home-language access", source:"Module 001",
+    background:"Mexican American", portraitRepresentation:"Latino / Mexican American", photo:"https://images.pexels.com/photos/12333891/pexels-photo-12333891.jpeg?auto=compress&cs=tinysrgb&w=500",
+    summary:"Strong science understanding becomes more visible when Spanish and emerging English are both available.",
+    artifacts:[
+      ["September","English-only science check","Response is incomplete; teacher notes hesitation with print-heavy directions."],
+      ["October","Bilingual science response","Correctly identifies water, sunlight, and air using Spanish print access."],
+      ["November","Partner explanation","Uses Spanish explanation plus English key words to explain why a plant wilted."],
+      ["January","Independent English growth sample","Produces a short English causal sentence with a bilingual word bank available."]
+    ]
+  },
+  {
+    id:"jihoon", name:"Ji-hoon", grade:"Grade 1", languages:"Korean + English",
+    proficiency:"NEP", access:"Assessment-language access", source:"Module 001",
+    background:"Korean American", portraitRepresentation:"Korean / East Asian", photo:"https://images.pexels.com/photos/10638096/pexels-photo-10638096.jpeg?auto=compress&cs=tinysrgb&w=500",
+    summary:"Content knowledge is stronger than English-only written assessment performance initially suggests.",
+    artifacts:[
+      ["September","English-only written assessment","Low score; directions and answer choices require more English reading than the science target."],
+      ["October","Korean-access science check","Correctly identifies plant needs when print access is provided in Korean."],
+      ["December","Teacher conference","Points, draws, and uses emerging English to explain water and sunlight."],
+      ["February","English supported response","Completes the same type of science task with visuals and a small English word bank."]
+    ]
+  },
+  {
+    id:"sophia", name:"Sophia", grade:"Grade 1", languages:"Spanish + English",
+    proficiency:"LEP", access:"Visual / reading access concern", source:"Module 001",
+    background:"Colombian American", portraitRepresentation:"Latina / Colombian American", photo:"https://images.pexels.com/photos/13770244/pexels-photo-13770244.jpeg?auto=compress&cs=tinysrgb&w=500",
+    summary:"Repeated access difficulty appears across languages, raising a question that cannot be explained by English development alone.",
+    artifacts:[
+      ["September","Spanish print science task","Knows the content orally but struggles to track visually dense print."],
+      ["October","English visual task","Similar tracking difficulty appears despite simplified language."],
+      ["December","Teacher observation","Loses place during near-copying and crowded worksheets; oral responses remain stronger."],
+      ["February","Reduced-clutter format","Performance improves when spacing, contrast, and item density are adjusted."]
+    ]
+  },
+  {
+    id:"aiden", name:"Aiden", grade:"Grade 1", languages:"English + AAC/symbol system",
+    proficiency:"FEP / English-dominant", access:"AAC / symbol response", source:"Module 001",
+    background:"Black American", portraitRepresentation:"Black / African American", photo:"https://images.pexels.com/photos/11489055/pexels-photo-11489055.jpeg?auto=compress&cs=tinysrgb&w=500",
+    summary:"Content knowledge is consistently demonstrated through AAC, symbols, pointing, drawing, and partner interaction.",
+    artifacts:[
+      ["September","Symbol-based science check","Selects water, sunlight, and air accurately using symbols."],
+      ["October","AAC explanation","Builds a short sequence showing water → plant → grow."],
+      ["January","Drawing + AAC response","Adds roots and sunlight to a plant diagram and explains with device-supported language."],
+      ["March","Partner investigation","Uses AAC to predict which plant will grow better and later confirms the prediction."]
+    ]
+  },
+  {
+    id:"gideon", name:"Gideon", grade:"Grade 1", languages:"English",
+    proficiency:"English-dominant", access:"Traditional print access", source:"Module 001 • Comparison Case",
+    background:"White American", portraitRepresentation:"White American", photo:"https://images.pexels.com/photos/6951989/pexels-photo-6951989.jpeg?auto=compress&cs=tinysrgb&w=500",
+    summary:"Assessment language and response mode generally align with the learner, providing a useful comparison for access demands.",
+    artifacts:[
+      ["September","Traditional science check","Correctly identifies water, sunlight, and air."],
+      ["October","Independent writing","Explains that plants need water and sun in a complete response."],
+      ["January","Science notebook","Uses drawing and writing to record plant changes over several days."],
+      ["March","Independent explanation","Explains a cause-and-effect relationship without additional access supports."]
+    ]
+  },
+  {
+    id:"lucia", name:"Lucía", grade:"Kindergarten", languages:"Spanish + English",
+    proficiency:"LEP", access:"Bilingual oral language", source:"Module 002-A",
+    background:"Colombian American", portraitRepresentation:"Latina / Colombian American", photo:"https://images.pexels.com/photos/5726831/pexels-photo-5726831.jpeg?auto=compress&cs=tinysrgb&w=500",
+    summary:"Bilingual oral explanations show content knowledge, causal language, sequencing, and developing English grammar.",
+    artifacts:[
+      ["October","Plant observation conference","Uses Spanish and English to explain that water and sunlight help plants."],
+      ["November","Picture retell","Sequences a three-part science event with gesture and bilingual language."],
+      ["January","Oral cause/effect sample","Uses because independently in an English-dominant explanation."],
+      ["March","Recorded partner explanation","Produces a longer English explanation while still strategically using Spanish for precision."]
+    ]
+  },
+  {
+    id:"minh", name:"Minh", grade:"Grade 1", languages:"Vietnamese + English",
+    proficiency:"LEP", access:"Writing + oral/drawing bridge", source:"Module 002-B",
+    background:"Vietnamese American", portraitRepresentation:"Vietnamese / Southeast Asian", photo:"https://images.pexels.com/photos/34390876/pexels-photo-34390876.jpeg?auto=compress&cs=tinysrgb&w=500",
+    summary:"Early independent writing understates science reasoning that is visible through drawing and oral explanation.",
+    artifacts:[
+      ["October","Independent writing","Writes: “plant ned wotr. sun. it gro.”"],
+      ["October","Drawing + conference","Shows roots, water, sunlight, and explains the observed plant change orally."],
+      ["January","Supported science writing","Uses oral rehearsal and a because frame to expand a written explanation."],
+      ["March","Independent science response","Writes a multi-sentence explanation with increasingly conventional spelling."]
+    ]
+  },
+  {
+    id:"samira", name:"Samira", grade:"Kindergarten", languages:"Arabic + English",
+    proficiency:"NEP", access:"Multimodal communication", source:"Module 002-C",
+    background:"Jordanian American", portraitRepresentation:"Arab / Jordanian", photo:"https://images.pexels.com/photos/30146324/pexels-photo-30146324.jpeg?auto=compress&cs=tinysrgb&w=500",
+    summary:"Meaning is distributed across drawing, gesture, Arabic labels, and emerging English rather than contained in one mode.",
+    artifacts:[
+      ["October","Multimodal plant response","Combines drawing, gesture, Arabic labeling, and English words to show plant change."],
+      ["December","Picture sequence","Uses gesture and English key words to describe first/next/last."],
+      ["February","Bilingual labeled diagram","Adds English labels alongside Arabic labels without abandoning the home language."],
+      ["April","Oral + visual explanation","Uses longer English phrases while drawing remains an important planning and meaning-making tool."]
+    ]
+  },
+  {
+    id:"ayaan", name:"Ayaan", grade:"Grade 2", languages:"Somali + English",
+    proficiency:"LEP", access:"Oral academic language", source:"Module 002-D",
+    background:"Somali American", portraitRepresentation:"Somali / East African", photo:"https://images.pexels.com/photos/13889715/pexels-photo-13889715.jpeg?auto=compress&cs=tinysrgb&w=500",
+    summary:"Scientific reasoning is sophisticated even while English morphology and syntax remain developing.",
+    artifacts:[
+      ["September","Evaporation conference","Explains that heat causes water to go into the air and predicts slower change in colder conditions."],
+      ["November","Partner science talk","Uses comparative language with teacher recasts."],
+      ["January","Recorded explanation","Uses more precise vocabulary: heat, water, air, evaporate."],
+      ["March","Independent oral response","Sustains a multi-turn explanation with causal and predictive language."]
+    ]
+  },
+  {
+    id:"mateo", name:"Mateo", grade:"Grade 2", languages:"Spanish + English",
+    proficiency:"LEP", access:"Bilingual written language", source:"Module 002-E",
+    background:"Mexican American", portraitRepresentation:"Latino / Mexican American", photo:"https://images.pexels.com/photos/5768563/pexels-photo-5768563.jpeg?auto=compress&cs=tinysrgb&w=500",
+    summary:"Comprehension is visible before English verb forms and sentence conventions are consistently conventional.",
+    artifacts:[
+      ["September","Reading response","Sequences events, explains motivation, and states a lesson using Spanish and English."],
+      ["September","Supported revision","Revises one sentence for clearer English while preserving his original meaning."],
+      ["December","Narrative response","Uses transition words and increasingly consistent verb forms."],
+      ["March","Independent literary response","Explains character motivation and theme in an extended English paragraph."]
+    ]
+  },
+  {
+    id:"thiago", name:"Thiago", grade:"Grade 1", languages:"Portuguese + English",
+    proficiency:"LEP", access:"Multimodal mathematical reasoning", source:"Module 002-F",
+    background:"Brazilian American", portraitRepresentation:"Brazilian / Latino", photo:"https://images.pexels.com/photos/7192140/pexels-photo-7192140.jpeg?auto=compress&cs=tinysrgb&w=500",
+    summary:"Mathematical reasoning is demonstrated through manipulatives, symbols, gesture, Portuguese, and emerging English.",
+    artifacts:[
+      ["October","Subtraction story problem","Models 8 − 3 = 5 with counters, symbols, gesture, Portuguese, and English."],
+      ["December","Math partner talk","Explains a take-away problem using an equation and short English phrases."],
+      ["February","Drawing + equation","Represents subtraction with a drawing before explaining the operation orally."],
+      ["April","Independent reasoning","Writes an equation and gives a complete English explanation with minimal prompting."]
+    ]
+  }
+];
+
+function showPortfolios(){
+  document.getElementById("screen").classList.remove("flash-access");
+  setStatus("Module 003: Student Portfolios opened.", "unlock");
+  document.getElementById("screen").innerHTML = `
+    <h2>Module 003: Student Portfolios</h2>
+    <div class="labbox">
+      <strong>Investigation focus:</strong> What changes when we stop judging a learner from one performance and examine evidence collected across time, contexts, and response modes?
+    </div>
+    <p>Module 003 reconnects every learner from Modules 001 and 002. Each portfolio contains a longitudinal evidence trail rather than a single assessment event.</p>
+    <div class="evidence">
+      <strong>Guiding Question:</strong><br>
+      Which conclusions become stronger, weaker, or more complicated when additional evidence is added over time?
+    </div>
+    <div class="warning">
+      <strong>Simulation note:</strong> All students, records, and portfolio artifacts are theoretical. Each student now has an explicit fictional cultural/national background. Portfolio portraits use representational stock/model photographs selected for a front-facing, school-file headshot appearance and consistency with each fictional background.
+    </div>
+    <div class="warning">
+      <strong>Language-status note:</strong> NEP and LEP appear here as simulated school-record descriptors. They are not treated as identities or as complete descriptions of a learner's multilingual development.
+    </div>
+    <div class="evidence">
+      <strong>Portfolio portrait standard:</strong><br>
+      Front-facing • head-and-shoulders crop • elementary-aged child • direct camera gaze when available • uncluttered composition • age-appropriate appearance • representation consistent with the fictional background stated in the portfolio. Stock imagery is sourced from Pexels.
+    </div>
+    <div class="portfolio-grid">
+      ${portfolioStudents.map(p=>`
+        <div class="portfolio-card" onclick="openPortfolio('${p.id}')">
+          <div class="portfolio-head">
+            <img class="student-photo" src="${p.photo}" alt="Representational stock portrait for ${p.name}" onerror="this.style.display='none'">
+            <div>
+              <strong>${p.name}</strong><br>
+              <span class="badge">${p.grade}</span>
+              <div class="smallnote">${p.languages}</div><div class="smallnote"><strong>Fictional background:</strong> ${p.background}</div>
+              <div class="profile-strip">
+                <span class="badge">${p.proficiency}</span>
+                <span class="badge">${p.source}</span>
+              </div>
+            </div>
+          </div>
+          <div class="smallnote">${p.access}</div>
+        </div>
+      `).join("")}
+    </div>
+    <button onclick="showModules()">Back to Module Directory</button>
+  `;
+}
+
+function openPortfolio(id){
+  loadingThen(()=>renderPortfolio(id), "Opening cumulative student record...");
+}
+
+function renderPortfolio(id){
+  const p=portfolioStudents.find(x=>x.id===id);
+  if(!p) return showPortfolios();
+  setStatus(`${p.name}'s portfolio opened.`, "file");
+  document.getElementById("screen").innerHTML=`
+    <h2>${p.name}: Cumulative Portfolio</h2>
+    <div class="portfolio-head">
+      <img class="student-photo" src="${p.photo}" alt="Representational stock portrait for ${p.name}" onerror="this.style.display='none'">
+      <div>
+        <strong style="font-size:1.35rem">${p.name}</strong>
+        <div class="profile-strip">
+          <span class="badge">${p.grade}</span>
+          <span class="badge">${p.languages}</span>
+          <span class="badge">${p.proficiency}</span>
+        </div>
+        <div class="smallnote"><strong>Fictional background:</strong> ${p.background}</div>
+        <div class="smallnote"><strong>Fictional background:</strong> ${p.background}</div>
+        <div class="smallnote">${p.access} • ${p.source}</div>
+        <div class="proficiency-note"><strong>Portrait:</strong> Representational school-style stock photograph; ${p.portraitRepresentation}.</div>
+      </div>
+    </div>
+
+    <div class="notebook">
+      <strong>Portfolio hypothesis:</strong><br>
+      ${p.summary}
+    </div>
+
+    <div class="step-label">LONGITUDINAL EVIDENCE TRAIL</div>
+    ${p.artifacts.map((a,i)=>`
+      <div class="timeline-item">
+        <strong>${a[0]} — Artifact ${i+1}</strong><br>
+        <span class="badge">${a[1]}</span>
+        <p>${a[2]}</p>
+      </div>
+    `).join("")}
+
+    <div class="evidence">
+      <strong>Portfolio investigator prompt:</strong><br>
+      Do the artifacts show a stable pattern, growth over time, an access effect, or a question that still needs additional evidence?
+    </div>
+
+    <button class="primary" onclick="portfolioJudgment('${p.id}','supported')">Pattern is well supported</button>
+    <button onclick="portfolioJudgment('${p.id}','partial')">Partially supported / qualified</button>
+    <button onclick="portfolioJudgment('${p.id}','more')">More evidence needed</button>
+
+    <div id="portfolioJudgmentBox" class="feedback">Record an evidence-strength judgment.</div>
+    <button onclick="showPortfolios()">Back to Portfolio Archive</button>
+  `;
+}
+
+function portfolioJudgment(id,choice){
+  const p=portfolioStudents.find(x=>x.id===id);
+  const messages={
+    supported:`A longitudinal pattern is visible for ${p.name}, but a strong portfolio conclusion should still name the conditions under which the evidence was collected.`,
+    partial:`Good caution. Portfolios strengthen interpretation by showing patterns, but different artifacts may support different conclusions about content, language, access, and instruction.`,
+    more:`“More evidence needed” is always legitimate when the available artifacts do not answer the specific question being asked. Portfolio assessment should reduce overclaiming, not create certainty where none exists.`
+  };
+  const box=document.getElementById("portfolioJudgmentBox");
+  box.className="feedback correct";
+  box.innerHTML=messages[choice]+`<br><br><strong>Next development step:</strong> This portfolio will receive an interactive evidence-synthesis task before Module 003 is finalized.`;
+  beep("complete");
+}
+
+function showFolders(){
+  setStatus("Case files available.", "file");
+  document.getElementById("screen").innerHTML = `
+    <h2>Case Files</h2>
+    <p>Select a case file. Complete the assessment task, then decide what the evidence supports.</p>
+    <div class="row">
+      ${students.map(s => `
+        <div class="folder-card" onclick="openStudent('${s.id}')">
+          <strong>Case File ${s.caseNo}</strong><br>
+          <span class="badge">${s.folder}</span>
+          <p>${s.name}</p>
+          <p class="smallnote">${s.access}</p>
+          ${reviewed.has(s.id) ? '<span class="badge">Reviewed</span>' : ''}
+        </div>`).join("")}
+    </div>
+    <div class="warning">
+      Do not jump directly from “incorrect” to “does not understand.” Evaluate the quality of the evidence.
+    </div>
+    <button onclick="showExperts()">Professional Consultation</button>
+  `;
+}
+
+function openStudent(id){
+  loadingThen(()=>renderStudent(id), "Opening case file...");
+}
+
+function renderStudent(id){
+  currentStudent = students.find(s=>s.id===id);
+  selected = new Set();
+  const s = currentStudent;
+  const q = s.visual ? `<span class="visual-challenge" data-text="${s.question}">${s.question}</span>` : s.question;
+  document.getElementById("screen").classList.toggle("flash-access", !!s.visual);
+  document.getElementById("screen").innerHTML = `
+    <h2>Case File ${s.caseNo}: ${s.name}</h2>
+    <div class="badge">${s.access}</div>
+    <div class="notebook">Case Profile: ${s.profile}</div>
+    <div class="question">${q}</div>
+    <div id="options">
+      ${s.options.map(opt=>{
+        let label = opt;
+        if(s.visual) label = `<span class="moving visual-challenge" data-text="${opt}">${opt}</span>`;
+        if(s.symbols) label = `<span class="symbol">${opt.split(" ")[0]}</span> ${opt.substring(2)}`;
+        return `<label class="option"><input type="checkbox" value="${opt}" onchange="toggleOption(this)"> ${label}</label>`;
+      }).join("")}
+    </div>
+    ${s.visual ? '<button onclick="triggerBlackout()">Trigger Visual Access Interruption</button>' : ''}
+    <button class="primary" onclick="analyze()">Analyze Evidence</button>
+    <button onclick="document.getElementById('screen').classList.remove('flash-access'); showFolders()">Back to Case Files</button>
+    <div id="analysis" class="feedback">Awaiting response.</div>
+  `;
+  if(s.visual){
+    setStatus("Visual access barrier active.", "error");
+    setTimeout(triggerBlackout, 700);
+  } else {
+    setStatus(`Case File ${s.caseNo} opened.`, "file");
+  }
+}
+
+function triggerBlackout(){
+  const overlay = document.getElementById("blackout");
+  overlay.style.display = "flex";
+  beep("error");
+  setTimeout(()=>{ overlay.style.display = "none"; }, 3000);
+}
+
+function toggleOption(box){
+  if(box.checked) selected.add(box.value);
+  else selected.delete(box.value);
+}
+
+function sameSet(a,b){ return a.length===b.length && a.every(x=>b.includes(x)); }
+
+function analyze(){
+  document.getElementById("screen").classList.remove("flash-access");
+  const s = currentStudent;
+  const ans = Array.from(selected);
+  const correct = sameSet(ans, s.correct);
+  reviewed.add(s.id);
+  updateBar();
+  setStatus(`Evidence logged for Case File ${s.caseNo}.`, correct ? "complete" : "error");
+
+  const suggestedExpert = s.expertKeys.map(key => `<button onclick="openExpert('${key}')">Consult ${experts[key].name}</button>`).join("");
+
+  document.getElementById("analysis").innerHTML = `
+    <div class="${correct ? 'correct' : 'incorrect'}" style="padding:10px;border:1px solid #8a999f;">
+      <strong>Assessment Result:</strong> ${correct ? "Correct content response." : "Incomplete or incorrect response."}
+    </div>
+    <div class="evidence"><strong>Interpretation:</strong> ${s.interpretation}</div>
+    <h3>Based on today’s evidence, what is the most appropriate instructional conclusion?</h3>
+    <div class="choice-big" onclick="decision('mastery')">The student clearly understands the science concept.</div>
+    <div class="choice-big" onclick="decision('support')">The student needs another opportunity with different supports.</div>
+    <div class="choice-big" onclick="decision('format')">Offer another response format.</div>
+    <div class="choice-big" onclick="decision('evidence')">More evidence is needed before drawing conclusions.</div>
+    <div id="decisionBox" class="feedback">Select a conclusion.</div>
+    <div style="margin-top:10px;">${suggestedExpert}</div>
+  `;
+}
+
+function decision(d){
+  const response = {
+    mastery:"Possible, but be careful: mastery should be supported by accessible evidence aligned to the content target.",
+    support:"Strong next step. Changing supports may clarify whether the issue is content knowledge or access.",
+    format:"Strong next step. Response format should match the learning target, not create unnecessary barriers.",
+    evidence:"Best professional conclusion. A single assessment condition should not carry the full weight of instructional or referral decisions."
+  };
+  document.getElementById("decisionBox").textContent = response[d];
+  setStatus("Instructional conclusion recorded.", "file");
+}
+
+function showReveal(){
+  document.getElementById("screen").classList.remove("flash-access");
+  setStatus("Evidence summary generated.", "complete");
+  document.getElementById("screen").innerHTML = `
+    <h2>Evidence Summary</h2>
+    <div class="evidence"><strong>Finding 1:</strong> The science content did not change. Only the access conditions changed.</div>
+    <div class="evidence"><strong>Finding 2:</strong> English-only assessment can measure language proficiency more than content mastery.</div>
+    <div class="evidence"><strong>Finding 3:</strong> Multilingual learners may be under-identified or misidentified for special education when teams do not separate language development, content knowledge, and possible disability-related needs.</div>
+    <div class="evidence"><strong>Finding 4:</strong> Translanguaging, visuals, oral explanation, drawing, symbols, and AAC can all provide valid evidence when aligned to the learning target.</div>
+    <div class="notebook">
+      Final Reveal:<br><br>
+      Every student in this investigation understood that plants need water, sunlight, and air.<br><br>
+      The variable was never the science.<br>
+      The variable was the assessment.
+    </div>
+    <button onclick="showExperts()">Professional Consultation</button>
+  `;
+}
+
+function showExperts(){
+  document.getElementById("screen").classList.remove("flash-access");
+  setStatus("Professional consultation archive opened.", "unlock");
+  document.getElementById("screen").innerHTML = `
+    <h2>Professional Consultation</h2>
+    <p>Open a panel to connect the investigation to scholarship and classroom application. External links open in a new tab.</p>
+    <div class="archive-grid">
+      ${Object.entries(experts).map(([key,e])=>`
+        <div class="archive-card">
+          <h3>${e.name}</h3>
+          <span class="badge">${e.type}</span>
+          <p><strong>Focus:</strong> ${e.focus}</p>
+          <p class="smallnote">${e.bestAfter}</p>
+          <button class="primary" onclick="openExpert('${key}')">Consult</button>
+        </div>
+      `).join("")}
+    </div>
+  `;
+}
+
+function openExpert(key){
+  const e = experts[key];
+  setStatus(`Consultation connected: ${e.name}.`, "unlock");
+  const linkHtml = e.links.map(([label,url]) => `<a class="linkbutton primary" href="${url}" target="_blank" rel="noopener noreferrer">${label}</a>`).join(" ");
+  document.getElementById("screen").innerHTML = `
+    <div class="expert-head">
+      <div class="avatar">${e.initials}</div>
+      <div>
+        <h2 style="margin-bottom:4px;">${e.name}</h2>
+        <span class="badge">${e.type}</span>
+        <div><strong>Research Focus:</strong> ${e.focus}</div>
+        <div class="smallnote">${e.bestAfter}</div>
+      </div>
+    </div>
+    <div class="clipbox">
+      <h3>${e.clipTitle}</h3>
+      ${e.blurb.map(line => `<div class="clipline">${line}</div>`).join("")}
+    </div>
+    <div class="labbox"><strong>Classroom Application:</strong><br>${e.application}</div>
+    <div class="notebook">Discussion Prompt: How does this expert help us interpret student evidence more carefully?</div>
+    <div class="warning">External resources are optional. They open in a new tab.</div>
+    <div>${linkHtml}</div>
+    <button onclick="showExperts()">Back to Professional Consultation</button>
+    <button onclick="showFolders()">Back to Case Files</button>
+    <button onclick="showReveal()">Back to Evidence Summary</button>
+  `;
+  updateBar();
+}
+
+function showAbout(){
+  setStatus("GIDA Labs version information loaded.", "ding");
+  document.getElementById("screen").innerHTML = `
+    <h2>GIDA Labs</h2>
+    <div class="notebook">
+      Version 1.0<br>
+      Assessment Investigation 001<br><br>
+      Designed by Paris Gideon Daniel<br>
+      EDU-3381: Diverse Learners in the Mainstream Classroom<br><br>
+      Purpose: Demonstrate how assessment access can shape conclusions about multilingual learners' content knowledge.
+    </div>
+    <button onclick="showIntro()">Return to Start</button>
+  `;
+}
+
+function resetLab(){
+  reviewed = new Set();
+  currentStudent = null;
+  selected = new Set();
+  updateBar();
+  document.getElementById("screen").classList.remove("flash-access");
+  setStatus("Evidence log reset.", "ding");
+  showIntro();
+}
+
+showIntro();
+updateBar();
+
+</script>
+</body>
+</html>
