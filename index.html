@@ -427,12 +427,54 @@ function showModules(){
     <p>This assignment includes a vertical slice of a larger professional development concept.</p>
     <div class="row">
       <div class="folder-card module-card" onclick="showFolders()"><strong>Module 001</strong><br><span class="badge">Available</span><p>Assessment Access</p></div>
-      <div class="folder-card module-card locked"><strong>Module 002</strong><br><span class="badge">Locked</span><p>Language Samples</p></div>
+      <div class="folder-card module-card" onclick="showLanguageSamples()"><strong>Module 002</strong><br><span class="badge">Available</span><p>Language Samples</p></div>
       <div class="folder-card module-card locked"><strong>Module 003</strong><br><span class="badge">Locked</span><p>Student Portfolios</p></div>
       <div class="folder-card module-card locked"><strong>Module 004</strong><br><span class="badge">Locked</span><p>Peer Assessment</p></div>
       <div class="folder-card module-card locked"><strong>Module 005</strong><br><span class="badge">Locked</span><p>Self-Assessment Tools</p></div>
     </div>
-    <div class="warning">Prototype note: Only Module 001 is active for this presentation.</div>
+    <div class="warning">Development note: Modules 001 and 002 are active. Module 002 is ready for language-sample case development.</div>
+  `;
+}
+
+
+function showLanguageSamples(){
+  document.getElementById("screen").classList.remove("flash-access");
+  setStatus("Module 002: Language Samples opened.", "unlock");
+  document.getElementById("screen").innerHTML = `
+    <h2>Module 002: Language Samples</h2>
+    <div class="labbox">
+      <strong>Investigation focus:</strong> What can a student language sample tell us about language development, content understanding, and the supports a learner may need next?
+    </div>
+    <p>This module will use <strong>theoretical student work samples</strong> to practice interpreting evidence without overgeneralizing from a single response.</p>
+    <div class="evidence">
+      <strong>Guiding Question:</strong><br>
+      When we examine a student language sample, what can we reasonably conclude—and what additional evidence would we still need?
+    </div>
+    <h3>Language Sample Archive</h3>
+    <div class="row">
+      <div class="folder-card module-card locked">
+        <strong>Sample 002-A</strong><br>
+        <span class="badge">In Development</span>
+        <p>Oral Language</p>
+        <p class="smallnote">Theoretical sample placeholder</p>
+      </div>
+      <div class="folder-card module-card locked">
+        <strong>Sample 002-B</strong><br>
+        <span class="badge">In Development</span>
+        <p>Written Language</p>
+        <p class="smallnote">Theoretical sample placeholder</p>
+      </div>
+      <div class="folder-card module-card locked">
+        <strong>Sample 002-C</strong><br>
+        <span class="badge">In Development</span>
+        <p>Multimodal Language</p>
+        <p class="smallnote">Theoretical sample placeholder</p>
+      </div>
+    </div>
+    <div class="warning">
+      Module shell is active. Individual language samples will be added next so each case can be developed and tested separately.
+    </div>
+    <button onclick="showModules()">Back to Module Directory</button>
   `;
 }
 
