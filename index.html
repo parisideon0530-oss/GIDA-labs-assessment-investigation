@@ -203,6 +203,17 @@ button.folder{width:100%;text-align:left;margin:4px 0}
 .reflection-card{border:2px dashed #879aa4;background:#fff;padding:12px;margin:12px 0}
 .goal-card{border-left:5px solid #4e7b61;background:#f6fbf7;padding:12px;margin:10px 0}
 
+
+.gida-copyright{padding:12px 18px;text-align:center;background:#c7d6de;border-top:2px solid #778d99;color:#243946;font-size:.82rem;line-height:1.5}
+/* Linked GIDA products: preserve the existing folder-button appearance. */
+.gida-products-panel a.folder{display:block;width:100%;text-align:left;line-height:1.3;white-space:normal}
+.gida-products-panel a:focus-visible{outline:3px solid #1d4f75;outline-offset:2px}
+
+.developer-profile{display:grid;grid-template-columns:minmax(190px,250px) 1fr;gap:20px;align-items:start;margin:14px 0 18px}
+.developer-portrait{display:block;width:100%;height:auto;max-height:420px;object-fit:cover;object-position:center 25%;border:5px solid #f7fbfd;outline:2px solid #7f95a0;box-shadow:4px 5px 0 rgba(0,0,0,.13)}
+.developer-profile h3{font-size:1.35rem;color:#1d4f75;margin:10px 0 6px}
+.developer-profile p{line-height:1.55}
+@media(max-width:720px){.developer-profile{grid-template-columns:1fr}.developer-portrait{max-width:310px}}
 </style>
 </head>
 <body>
@@ -226,6 +237,15 @@ button.folder{width:100%;text-align:left;margin:4px 0}
         <button class="folder" onclick="showFolders()">Case Files</button>
         <button class="folder" onclick="showReveal()">Evidence Summary</button>
         <button class="folder" onclick="showExperts()">Professional Consultation</button>
+        <button class="folder" onclick="showDeveloper()">About the Developer</button>
+      </div>
+
+      <div class="panel gida-products-panel">
+        <h3>GIDA Product Library</h3>
+        <a class="folder linkbutton" href="https://parisideon0530-oss.github.io/GIDA-Social-Studies/" target="_blank" rel="noopener noreferrer">Social Studies Analysis ↗</a>
+        <a class="folder linkbutton" href="https://parisideon0530-oss.github.io/GIDA-Social-Studies/GIDA%20Social%20Studies.pdf" target="_blank" rel="noopener noreferrer">Farms Assessment Portfolio (PDF) ↗</a>
+        <a class="folder linkbutton" href="https://parisideon0530-oss.github.io/GIDA-digital/" target="_blank" rel="noopener noreferrer">Digital Assessment Dashboard ↗</a>
+        <p class="smallnote">Other GIDA projects open in a new tab; your current investigation stays open.</p>
       </div>
 
       <div class="panel">
@@ -257,6 +277,10 @@ button.folder{width:100%;text-align:left;margin:4px 0}
       <div class="screen" id="screen"></div>
     </main>
   </div>
+  <footer class="gida-copyright" role="contentinfo">
+    <strong>© 2026 P. Gideon Daniel. All rights reserved.</strong><br>
+    Owned and developed by P. Gideon Daniel · Colorado Springs, Colorado.
+  </footer>
 </div>
 
 <div id="blackout">Visual access interrupted...</div>
@@ -357,6 +381,20 @@ const experts = {
       ["Open Ofelia García interview: Translanguaging","https://www.youtube.com/watch?v=5Ljr4C9velU"],
       ["Open Language on the Move interview page","https://languageonthemove.com/translanguaging-ofelia-garcia-in-interview/"]
     ]
+  },
+  solanoFloresTrumbull:{
+    initials:"ST", name:"Guillermo Solano-Flores & Elise Trumbull", focus:"Language, cultural context, and assessment validity",
+    type:"Peer-reviewed research + consultation", bestAfter:"Use after a response changes when a prompt is clarified or the response mode changes.",
+    clipTitle:"Research Consultation: Examining Language in Context",
+    blurb:[
+      "Central argument: A test item can measure interpretation of wording and cultural context alongside the intended academic knowledge. Incorrect answers therefore require closer examination before concluding a learner lacks the content.",
+      "Item microanalysis examines the formal wording of an item, how students actually interpret it, and how that interpretation interacts with linguistic and social context. A school-lunch mathematics example involving ‘only $1.00 bills’ produced different intended interpretations across groups (84%, 56%, and 52%). These were sociocultural comparison groups, not a direct English-learner versus non-English-learner comparison.",
+      "The authors discuss developing bilingual versions concurrently and revising both through piloting. In an exploratory generalizability-theory analysis, item-by-student-by-language interactions accounted for 42% of score variance among 26 Mandarin speakers and 13% among 18 Spanish speakers.",
+      "Interpretation limit: These findings do not establish that every score difference reflects bias or that one accommodation is universally effective. Use multiple observations and compare evidence across conditions."
+    ],
+    application:"In the Plants, Farms, or Kings and Queens assessments, keep the content target constant while comparing an original prompt with clarified wording, a home-language opportunity, or an alternative response mode. Document the exact change and whether the learner's explanation or selection changed.",
+    links:[["Read article (DOI)","https://doi.org/10.3102/0013189X032002003"]],
+    citation:"Solano-Flores, G., & Trumbull, E. (2003). Examining language in context: The need for new research and practice paradigms in the testing of English-language learners. Educational Researcher, 32(2), 3–13. https://doi.org/10.3102/0013189X032002003"
   },
   gottlieb:{
     initials:"MG", name:"Margo Gottlieb", focus:"Meaningful multilingual assessment",
@@ -473,6 +511,12 @@ function showModules(){
       <div class="folder-card module-card" onclick="showPortfolios()"><strong>Module 003</strong><br><span class="badge">Available</span><p>Student Portfolios</p></div>
       <div class="folder-card module-card" onclick="showPeerAssessment()"><strong>Module 004</strong><br><span class="badge">Available</span><p>Peer Assessment</p></div>
       <div class="folder-card module-card" onclick="showSelfAssessment()"><strong>Module 005</strong><br><span class="badge">Available</span><p>Self-Assessment Tools</p></div>
+    </div>
+    <h3>Connected GIDA Projects</h3>
+    <p>Continue your inquiry in the related Social Studies Assessment Series or Digital Assessment Dashboard. These are separate projects and open in new tabs.</p>
+    <div class="row">
+      <a class="folder-card module-card" style="color:inherit;text-decoration:none" href="https://parisideon0530-oss.github.io/GIDA-Social-Studies/" target="_blank" rel="noopener noreferrer"><strong>GIDA Social Studies</strong><br><span class="badge">External project</span><p>Kindergarten Farms assessment and social studies analysis</p></a>
+      <a class="folder-card module-card" style="color:inherit;text-decoration:none" href="https://parisideon0530-oss.github.io/GIDA-digital/" target="_blank" rel="noopener noreferrer"><strong>GIDA Digital</strong><br><span class="badge">External project</span><p>Digital assessment dashboard</p></a>
     </div>
     <div class="warning">All five GIDA Labs assessment modules are active: Assessment Access, Language Samples, Student Portfolios, Peer Assessment, and Self-Assessment Tools.</div>
   `;
@@ -2556,7 +2600,32 @@ function portfolioJudgment(id,choice){
   beep("complete");
 }
 
+function clearVisualAccess(){
+  const screen = document.getElementById("screen");
+  if (screen) screen.classList.remove("flash-access");
+  const overlay = document.getElementById("blackout");
+  if (overlay) overlay.style.display = "none";
+  currentStudent = null;
+}
+
+// The case-specific visual effect must never leak into unrelated modules.
+document.addEventListener("DOMContentLoaded", () => {
+  const screen = document.getElementById("screen");
+  if (!screen) return;
+  const observer = new MutationObserver(() => {
+    const isSophiaCase = !!screen.querySelector("h2") &&
+      /^Case File 003: Sophia/.test(screen.querySelector("h2").textContent.trim());
+    if (!isSophiaCase) {
+      screen.classList.remove("flash-access");
+      const overlay = document.getElementById("blackout");
+      if (overlay) overlay.style.display = "none";
+    }
+  });
+  observer.observe(screen, {childList:true, subtree:false});
+});
+
 function showFolders(){
+  clearVisualAccess();
   setStatus("Case files available.", "file");
   document.getElementById("screen").innerHTML = `
     <h2>Case Files</h2>
@@ -2579,6 +2648,7 @@ function showFolders(){
 }
 
 function openStudent(id){
+  clearVisualAccess();
   loadingThen(()=>renderStudent(id), "Opening case file...");
 }
 
@@ -2615,6 +2685,7 @@ function renderStudent(id){
 }
 
 function triggerBlackout(){
+  if (!currentStudent || !currentStudent.visual || !document.querySelector("#screen h2")?.textContent.includes("Sophia")) return;
   const overlay = document.getElementById("blackout");
   overlay.style.display = "flex";
   beep("error");
@@ -2723,6 +2794,7 @@ function openExpert(key){
       ${e.blurb.map(line => `<div class="clipline">${line}</div>`).join("")}
     </div>
     <div class="labbox"><strong>Classroom Application:</strong><br>${e.application}</div>
+    ${e.citation ? `<div class="notebook"><strong>APA 7 Reference</strong><br>${e.citation}</div>` : ''}
     <div class="notebook">Discussion Prompt: How does this expert help us interpret student evidence more carefully?</div>
     <div class="warning">External resources are optional. They open in a new tab.</div>
     <div>${linkHtml}</div>
@@ -2740,10 +2812,35 @@ function showAbout(){
     <div class="notebook">
       Version 1.0<br>
       Assessment Investigation 001<br><br>
-      Designed by Paris Gideon Daniel<br>
+      Owned and developed by P. Gideon Daniel<br>Colorado Springs, Colorado<br>© 2026 P. Gideon Daniel. All rights reserved.<br>
       EDU-3381: Diverse Learners in the Mainstream Classroom<br><br>
       Purpose: Demonstrate how assessment access can shape conclusions about multilingual learners' content knowledge.
     </div>
+    <button class="primary" onclick="showDeveloper()">Meet the Developer</button>
+    <button onclick="showIntro()">Return to Start</button>
+  `;
+}
+
+function showDeveloper(){
+  document.getElementById("screen").classList.remove("flash-access");
+  setStatus("Developer profile opened.", "file");
+  document.getElementById("screen").innerHTML = `
+    <h2>About the Developer</h2>
+    <div class="developer-profile">
+      <img class="developer-portrait" src="assets/gideon-library-portrait.jpg" alt="Portrait of P. Gideon Daniel in a library, wearing glasses and a fur-trimmed hat." />
+      <div>
+        <span class="badge">Educator</span><span class="badge">Assessment Researcher</span><span class="badge">Colorado Springs, Colorado</span>
+        <h3>P. Gideon Daniel</h3>
+        <p><strong>Creator and developer of GIDA Labs</strong></p>
+        <p>P. Gideon Daniel is a Colorado Springs educator whose classroom experience spans pre-kindergarten, Significant Support Needs (SSN) classrooms serving kindergarten through fifth grade, and general education kindergarten.</p>
+        <p>His work with children who learn and communicate in different ways has shaped his interest in equitable assessment: determining what a student understands without confusing barriers in language, vision, or response format with gaps in academic knowledge.</p>
+        <p>GIDA Labs grew from that commitment to making assessment more accessible, informative, and responsive to individual learners. Its investigations, student profiles, and classroom tools invite educators to examine the evidence behind their instructional decisions.</p>
+        <p>He lives in Colorado Springs with his partner, Lauren, and their 12-year-old daughter. Outside the classroom, his interests include history, old books, science fiction, and comics.</p>
+      </div>
+    </div>
+    <div class="evidence"><strong>Developer's guiding question:</strong> When an assessment result appears to show a learning gap, how do we know whether it reflects what a student knows—or whether it reflects access to the assessment?</div>
+    <div class="notebook"><strong>Ownership:</strong> © 2026 P. Gideon Daniel. All rights reserved.<br>Owned and developed by P. Gideon Daniel · Colorado Springs, Colorado.</div>
+    <button class="primary" onclick="showAbout()">About GIDA Labs</button>
     <button onclick="showIntro()">Return to Start</button>
   `;
 }
@@ -2762,5 +2859,8 @@ showIntro();
 updateBar();
 
 </script>
+<script src="gida-extension.js"></script>
+<script src="gida-curriculum-builder.js"></script>
+<script src="gida-audio-accessibility.js"></script>
 </body>
 </html>
